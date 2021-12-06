@@ -1,7 +1,21 @@
 package main
 
+import (
+	"flag"
+	"fmt"
+)
+
 func main() {
-	c := NewConfig("src", "dist")
-	p := NewPure(c)
-	p.bundle()
+	fmt.Println("F L E X")
+	fmt.Println("- - - -")
+	watchFlag := flag.Bool("watch", false, "Watch the src directory for changes.")
+
+	flag.Parse()
+
+	f := NewFlex("src", "dist")
+	f.bundle()
+
+	if *watchFlag {
+		watch(f)
+	}
 }

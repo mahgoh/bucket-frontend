@@ -8,15 +8,15 @@ import (
 )
 
 type File struct {
-	Pure *Pure
+	Flex *Flex
 	Path string
 	In   string
 	Out  string
 }
 
-func NewFile(pure *Pure, path string) *File {
+func NewFile(flex *Flex, path string) *File {
 	return &File{
-		Pure: pure,
+		Flex: flex,
 		Path: path,
 	}
 }
@@ -44,10 +44,9 @@ func (f *File) LoadDependencies() {
 	}
 
 	for _, match := range matches {
-		component := f.Pure.loadComponent(match[1])
+		component := f.Flex.loadComponent(match[1])
 		f.Out = strings.ReplaceAll(f.Out, match[0], component.Out)
 	}
-
 }
 
 func (f *File) cleanUp() {
