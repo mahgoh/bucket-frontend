@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path"
 	"time"
@@ -13,14 +14,6 @@ type Flex struct {
 	Target     string
 }
 
-func (f *Flex) entryPath() string {
-	return path.Join(f.Source, "index.html")
-}
-
-func (f *Flex) outputPath() string {
-	return path.Join(f.Target, "index.html")
-}
-
 func (f *Flex) componentPath(name string) string {
 	filename := fmt.Sprintf("%s.html", name)
 	return path.Join(f.Source, "components", filename)
@@ -30,11 +23,22 @@ func (f *Flex) bundle() {
 	start := time.Now()
 	fmt.Println("[INFO] Bundling...")
 
-	entry := NewFile(f, f.entryPath())
-	entry.Load()
-	entry.cleanUp()
+	f.ClearTarget()
 
-	os.WriteFile(f.outputPath(), []byte(entry.Out), 0666)
+	entries, err := os.ReadDir(f.Source)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			filepath := path.Join(f.Source, entry.Name())
+			file := NewFile(f, filepath)
+			file.Load()
+			file.CleanUp()
+			file.Write()
+		}
+	}
 
 	duration := time.Since(start).Milliseconds()
 	fmt.Printf("[INFO] %d components loaded bundled in %dms.\n", len(f.Components), duration)
@@ -47,6 +51,18 @@ func (f *Flex) loadComponent(name string) *File {
 	component := NewFile(f, f.componentPath(name))
 	component.Load()
 	return component
+}
+
+func (f *Flex) ClearTarget() {
+	// remove target dir
+	if err := os.RemoveAll(f.Target); err != nil {
+		log.Fatal(err)
+	}
+
+	// create target dir
+	if err := os.MkdirAll(f.Target, 0755); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func NewFlex(source string, target string) *Flex {

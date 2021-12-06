@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"path"
 	"regexp"
 	"strings"
 )
@@ -35,6 +36,15 @@ func (f *File) Read() {
 	f.Out = string(data)
 }
 
+func (f *File) Write() {
+	sourcePath := strings.Split(f.Path, "/")
+	filename := sourcePath[len(sourcePath)-1]
+	filepath := path.Join(f.Flex.Target, filename)
+	if err := os.WriteFile(filepath, []byte(f.Out), 0644); err != nil {
+		log.Fatal(err)
+	}
+}
+
 func (f *File) LoadDependencies() {
 	pattern := regexp.MustCompile("<!--c:([a-z]+)-->")
 	matches := pattern.FindAllStringSubmatch(f.In, -1)
@@ -49,7 +59,7 @@ func (f *File) LoadDependencies() {
 	}
 }
 
-func (f *File) cleanUp() {
+func (f *File) CleanUp() {
 	// remove whitespace between tags
 	f.Out = regexp.MustCompile(`>\s+<`).ReplaceAllString(f.Out, "><")
 
