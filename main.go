@@ -8,7 +8,7 @@ import (
 func main() {
 	fmt.Println("F L E X")
 	fmt.Println("- - - -")
-	watchFlag := flag.Bool("watch", false, "Watch the src directory for changes.")
+	watchFlag := flag.Bool("watch", false, "Watch the src directory for changes and serves dist on 8080.")
 
 	flag.Parse()
 
@@ -16,6 +16,7 @@ func main() {
 	f.bundle()
 
 	if *watchFlag {
+		serve()
 		fmt.Println("[INFO] Watching file changes...")
 		watch(f)
 	}

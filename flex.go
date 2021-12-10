@@ -6,6 +6,8 @@ import (
 	"os"
 	"path"
 	"time"
+
+	"github.com/otiai10/copy"
 )
 
 type Flex struct {
@@ -40,8 +42,20 @@ func (f *Flex) bundle() {
 		}
 	}
 
+	// copy static files
+	f.copyStatic()
+
 	duration := time.Since(start).Milliseconds()
 	fmt.Printf("[INFO] %d components loaded bundled in %dms.\n", len(f.Components), duration)
+}
+
+func (f *Flex) copyStatic() {
+	// copy static files to dist dir
+	sourcePath := "static"
+	targetPath := path.Join("dist", "static")
+	if err := copy.Copy(sourcePath, targetPath); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (f *Flex) loadComponent(name string, props string) *File {
