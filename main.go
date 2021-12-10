@@ -16,6 +16,7 @@ func main() {
 	f.bundle()
 
 	if *watchFlag {
+		fmt.Println("[INFO] Watching file changes...")
 		watch(f)
 	}
 }

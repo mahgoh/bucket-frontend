@@ -1,4 +1,4 @@
-module github.com/mahgoh/html-comp
+module github.com/mahgoh/flex
 
 go 1.17
 

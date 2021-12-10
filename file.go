@@ -5,25 +5,29 @@ import (
 	"os"
 	"path"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
 type File struct {
-	Flex *Flex
-	Path string
-	In   string
-	Out  string
+	Flex  *Flex
+	Path  string
+	Props string
+	In    string
+	Out   string
 }
 
-func NewFile(flex *Flex, path string) *File {
+func NewFile(flex *Flex, path string, props string) *File {
 	return &File{
-		Flex: flex,
-		Path: path,
+		Flex:  flex,
+		Path:  path,
+		Props: props,
 	}
 }
 
 func (f *File) Load() {
 	f.Read()
+	f.LoadProps()
 	f.LoadDependencies()
 }
 
@@ -45,16 +49,37 @@ func (f *File) Write() {
 	}
 }
 
-func (f *File) LoadDependencies() {
-	pattern := regexp.MustCompile("<!--c:([a-z]+)-->")
-	matches := pattern.FindAllStringSubmatch(f.In, -1)
+func (f *File) LoadProps() {
+	pattern := regexp.MustCompile(`{{[\s]?\$([0-9]+)[\s]?}}`)
+	matches := pattern.FindAllStringSubmatch(f.Out, -1)
 
 	if matches == nil {
 		return
 	}
 
 	for _, match := range matches {
-		component := f.Flex.loadComponent(match[1])
+		props := strings.Split(f.Props, ";")
+		index, err := strconv.ParseInt(match[1], 10, 0)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if len(props) > int(index) {
+			f.Out = strings.ReplaceAll(f.Out, match[0], props[index])
+		}
+	}
+}
+
+func (f *File) LoadDependencies() {
+	pattern := regexp.MustCompile("<component name=\"([a-z-]+)\" (?:props=\"([a-zA-Z0-9;-]+)\" )?/>")
+	matches := pattern.FindAllStringSubmatch(f.Out, -1)
+
+	if matches == nil {
+		return
+	}
+
+	for _, match := range matches {
+		component := f.Flex.loadComponent(match[1], match[2])
 		f.Out = strings.ReplaceAll(f.Out, match[0], component.Out)
 	}
 }

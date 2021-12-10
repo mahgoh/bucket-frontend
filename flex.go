@@ -33,7 +33,7 @@ func (f *Flex) bundle() {
 	for _, entry := range entries {
 		if !entry.IsDir() {
 			filepath := path.Join(f.Source, entry.Name())
-			file := NewFile(f, filepath)
+			file := NewFile(f, filepath, "")
 			file.Load()
 			file.CleanUp()
 			file.Write()
@@ -44,11 +44,11 @@ func (f *Flex) bundle() {
 	fmt.Printf("[INFO] %d components loaded bundled in %dms.\n", len(f.Components), duration)
 }
 
-func (f *Flex) loadComponent(name string) *File {
+func (f *Flex) loadComponent(name string, props string) *File {
 	// add to components set
 	f.Components[name] = true
 
-	component := NewFile(f, f.componentPath(name))
+	component := NewFile(f, f.componentPath(name), props)
 	component.Load()
 	return component
 }
