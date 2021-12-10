@@ -12,7 +12,8 @@
  * animates elements in the viewport on page load
  */
 document.addEventListener('DOMContentLoaded', function () {
-  animateElementsInViewport()
+  // Add a short delay
+  setTimeout(animateElementsInViewport, 250)
 })
 
 /**
