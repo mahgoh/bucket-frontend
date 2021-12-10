@@ -1,0 +1,8 @@
+{
+  "Create new component": {
+    "prefix": "component",
+    "scope": "html",
+    "body": ["<component name=\"$1\" />"],
+    "description": "Create a new empty component"
+  }
+}
