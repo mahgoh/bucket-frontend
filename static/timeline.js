@@ -5,14 +5,15 @@
  * Once an element is inside the viewport (half of the height of the element is enough),
  * classes are replaced on the element, which triggers a CSS animation.
  *
- * The animation simply makes the element visible and adds a subtle upwards movement (transaltion).
+ * The animation simply makes the element visible (opacity-100) and adds a subtle upwards movement (translation).
  */
 
 /**
  * animates elements in the viewport on page load
  */
 document.addEventListener('DOMContentLoaded', function () {
-  // Add a short delay
+  // Add a short delay, because the images are loaded later, which causes element to be in the viewport
+  // that would be not once the image is loaded.
   setTimeout(animateElementsInViewport, 250)
 })
 
