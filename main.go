@@ -5,19 +5,51 @@ import (
 	"fmt"
 )
 
+// Is set by the compiler during build
+var GitSemverStr string
+
 func main() {
-	fmt.Println("F L E X")
-	fmt.Println("- - - -")
-	watchFlag := flag.Bool("watch", false, "Watch the src directory for changes and serves dist on 8080.")
+
+	// Flags
+	var flagWatchShort bool
+	var flagWatchLong bool
+	var flagVersionShort bool
+	var flagVersionLong bool
+
+	flagWatchDesc := "Watch the src directory for changes"
+	flagVersionDesc := "Print version"
+
+	flag.BoolVar(&flagWatchShort, "w", false, flagWatchDesc)
+	flag.BoolVar(&flagWatchLong, "watch", false, flagWatchDesc)
+	flag.BoolVar(&flagVersionShort, "v", false, flagVersionDesc)
+	flag.BoolVar(&flagVersionLong, "version", false, flagVersionDesc)
 
 	flag.Parse()
 
+	flagWatch := flagWatchShort || flagWatchLong
+	flagVersion := flagVersionShort || flagVersionLong
+
+	if flagVersion {
+		cmdVersion()
+		return
+	}
+
+	// Bundle HTML
 	f := NewFlex("src", "dist")
 	f.bundle()
 
-	if *watchFlag {
+	// Watch for file changes
+	if flagWatch {
 		serve()
 		fmt.Println("[INFO] Watching file changes...")
 		watch(f)
 	}
+}
+
+/*
+* Print version
+* (git describe --tags --dirty)
+ */
+func cmdVersion() {
+	fmt.Println(GitSemverStr)
 }
