@@ -46,7 +46,9 @@ func main() {
 
 	// Watch for file changes
 	if flagWatch {
-		serveInBackground(b.Target)
+		if flagServe {
+			serveInBackground(b.Target)
+		}
 		fmt.Println("[INFO] Watching file changes...")
 		watch(b)
 	}
