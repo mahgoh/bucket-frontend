@@ -1,33 +1,25 @@
 <main class="max-w-5xl mx-auto p-4 sm:px-6 lg:px-8">
   <div class="grid sm:grid-cols-3 gap-x-10 gap-y-4 grid-cols-1 mb-10">
-    <component name="dashboard-button" props="Create New Bucket Item!;" />
-    <component name="dashboard-button" props="ToDo Bucket Items;list" />
-    <component name="dashboard-button" props="Achieved Bucket Items;list" />
+    <component name="dashboard-button" props="Create;create-item" />
+    <component name="dashboard-button" props="Open;list" />
+    <component name="dashboard-button" props="Achieved;list" />
   </div>
   <div
-          class="
-        mb-4
-        sm:mb-6
-        transform
-        transition-all
-        translate-y-12
-        ease-out
-        duration-500
-        opacity-0
-      "
-          data-replace='{"translate-y-12": "translate-y-0", "opacity-0": "opacity-100"}'
+    class="mb-4 sm:mb-6 transform transition-all translate-y-12 ease-out duration-500 opacity-0"
+    data-replace='{"translate-y-12": "translate-y-0", "opacity-0": "opacity-100"}'
   >
-    <div class="border rounded-md sm:rounded-xl overflow-hidden border-blue-500 shadow-2xl">
-      <img src="/static/Marathon.jpg">
+    <div class="border rounded-md sm:rounded-xl overflow-hidden border-slate-300 shadow-sm">
+      <img src="/static/Marathon.jpg" />
       <div class="p-4 sm:p-6">
         <div class="font-bold sm:text-xl">Run a marathon</div>
-        <div class="sm:mt-1 text-gray-500 sm:text-lg">Finishing a full marathon.</div>
+        <div class="sm:mt-1 text-slate-500 sm:text-lg">Finishing a full marathon.</div>
         <div class="pt-4 text-sm sm:text-base">
-          <span class="font-medium bg-yellow-100 text-yellow-700 py-1 px-2 rounded-md">Fitness</span>
-          <span class="ml-2 text-gray-700">12.12.2021</span>
+          <span class="font-medium bg-yellow-100 text-yellow-700 py-1 px-2 rounded-md"
+            >Fitness</span
+          >
+          <span class="ml-2 text-slate-700">12.12.2021</span>
         </div>
       </div>
     </div>
   </div>
 </main>
-

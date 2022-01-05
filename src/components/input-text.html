@@ -1,0 +1,16 @@
+<div class="max-w-sm mb-8 last:mb-0">
+  <div class="flex justify-between">
+    <label for="{{$1}}" class="block text-sm font-medium text-slate-700">{{$2}}</label>
+    <span class="text-sm text-slate-500" id="{{$1}}-optional">{{$4}}</span>
+  </div>
+  <div class="mt-1">
+    <input
+      type="{{$0}}"
+      name="{{$1}}"
+      id="{{$1}}"
+      class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-slate-300 rounded-md"
+      placeholder="{{$3}}"
+      aria-describedby="{{$1}}-optional"
+    />
+  </div>
+</div>
