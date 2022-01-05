@@ -5,7 +5,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "start": "npx tailwindcss -i ./index.css -o ./static/bundle.css -c ./tailwind.config.js -m"
+    "start": "npx tailwindcss -i ./index.css -o ./dist/static/bundle.css -c ./tailwind.config.js -m"
   },
   "repository": {
     "type": "git",
