@@ -1,4 +1,4 @@
-module github.com/mahgoh/flex
+module github.com/mahgoh/bucket-frontend
 
 go 1.17
 
