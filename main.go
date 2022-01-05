@@ -13,20 +13,26 @@ func main() {
 	// Flags
 	var flagWatchShort bool
 	var flagWatchLong bool
+	var flagServeShort bool
+	var flagServeLong bool
 	var flagVersionShort bool
 	var flagVersionLong bool
 
 	flagWatchDesc := "Watch the src directory for changes"
+	flagServeDesc := "Serve the dist directory on port 8080"
 	flagVersionDesc := "Print version"
 
 	flag.BoolVar(&flagWatchShort, "w", false, flagWatchDesc)
 	flag.BoolVar(&flagWatchLong, "watch", false, flagWatchDesc)
+	flag.BoolVar(&flagServeShort, "s", false, flagServeDesc)
+	flag.BoolVar(&flagServeLong, "serve", false, flagServeDesc)
 	flag.BoolVar(&flagVersionShort, "v", false, flagVersionDesc)
 	flag.BoolVar(&flagVersionLong, "version", false, flagVersionDesc)
 
 	flag.Parse()
 
 	flagWatch := flagWatchShort || flagWatchLong
+	flagServe := flagServeShort || flagServeLong
 	flagVersion := flagVersionShort || flagVersionLong
 
 	if flagVersion {
@@ -40,9 +46,14 @@ func main() {
 
 	// Watch for file changes
 	if flagWatch {
-		serve()
+		serveInBackground(b.Target)
 		fmt.Println("[INFO] Watching file changes...")
 		watch(b)
+	}
+
+	// Serve dist directory
+	if flagServe {
+		serve(b.Target)
 	}
 }
 
