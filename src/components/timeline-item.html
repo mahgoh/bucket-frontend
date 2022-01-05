@@ -1,41 +1,18 @@
 <div
-      class="
-        relative
-        mb-4
-        sm:mb-6
-        transform
-        transition-all
-        translate-y-12
-        ease-out
-        duration-500
-        opacity-0
-      "
-      data-replace='{"translate-y-12": "translate-y-0", "opacity-0": "opacity-100"}'
-    >
-      <div
-        class="
-          w-4
-          sm:w-6
-          md:w-8
-          h-0.5
-          sm:h-1
-          bg-gray-200
-          absolute
-          z-30
-          left-0
-          top-1/2
-          transform
-          -translate-y-1/2 -translate-x-full
-        "
-      ></div>
-      <div class="border rounded-md sm:rounded-xl overflow-hidden">
-        <div class="p-4 sm:p-6">
-          <div class="font-bold sm:text-xl">{{$0}}</div>
-          <div class="sm:mt-1 text-gray-500 sm:text-lg">{{$1}}</div>
-          <div class="pt-4 text-sm sm:text-base">
-            <span class="font-medium bg-{{$2}}-100 text-{{$2}}-700 py-1 px-2 rounded-md">{{$3}}</span>
-            <span class="ml-2 text-gray-700">{{$4}}</span>
-          </div>
-        </div>
+  class="relative mb-4 sm:mb-6 transform transition-all translate-y-12 ease-out duration-500 opacity-0"
+  data-replace='{"translate-y-12": "translate-y-0", "opacity-0": "opacity-100"}'
+>
+  <div
+    class="w-4 sm:w-6 md:w-8 h-0.5 sm:h-1 bg-slate-200 absolute z-30 left-0 top-1/2 transform -translate-y-1/2 -translate-x-full"
+  ></div>
+  <div class="border rounded-md sm:rounded-xl overflow-hidden">
+    <div class="p-4 sm:p-6">
+      <div class="font-bold sm:text-xl">{{$0}}</div>
+      <div class="sm:mt-1 text-slate-500 sm:text-lg">{{$1}}</div>
+      <div class="pt-4 text-sm sm:text-base">
+        <span class="font-medium bg-{{$2}}-100 text-{{$2}}-700 py-1 px-2 rounded-md">{{$3}}</span>
+        <span class="ml-2 text-slate-700">{{$4}}</span>
       </div>
     </div>
+  </div>
+</div>
