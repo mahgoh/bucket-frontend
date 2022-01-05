@@ -1,0 +1,29 @@
+{
+  "name": "bucket-frontend",
+  "description": "Component-based HTML bundler written in Go - development environment for Bucket frontend.",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "npx tailwindcss -i ./index.css -o ./static/bundle.css -c ./tailwind.config.js -m"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mahgoh/bucket-frontend.git"
+  },
+  "keywords": [
+    "go",
+    "tailwindcss",
+    "bucket"
+  ],
+  "bugs": {
+    "url": "https://github.com/mahgoh/bucket-frontend/issues"
+  },
+  "homepage": "https://github.com/mahgoh/bucket-frontend#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.0.11"
+  },
+  "dependencies": {
+    "@tailwindcss/forms": "^0.4.0"
+  }
+}
