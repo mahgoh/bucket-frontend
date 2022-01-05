@@ -23,7 +23,7 @@ func (f *Flex) componentPath(name string) string {
 
 func (f *Flex) bundle() {
 	start := time.Now()
-	fmt.Println("[INFO] Bundling...")
+	fmt.Println("[INFO] Loading components...")
 
 	f.ClearTarget()
 
@@ -46,7 +46,7 @@ func (f *Flex) bundle() {
 	f.copyStatic()
 
 	duration := time.Since(start).Milliseconds()
-	fmt.Printf("[INFO] %d components loaded bundled in %dms.\n", len(f.Components), duration)
+	fmt.Printf("[INFO] %d components loaded in %dms.\n", len(f.Components), duration)
 }
 
 func (f *Flex) copyStatic() {
