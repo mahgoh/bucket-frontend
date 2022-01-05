@@ -1,6 +1,6 @@
 # bucket-frontend
 
-This repository serves as the development environment for the frontend of the Bucket webapp. The frontend is developed using a simple custom HTML bundler written in [Go](https://go.dev) that produces static HTML files which are then integrated in the Bucket backend.
+This repository serves as the development environment for the frontend of the [Bucket](https://github.com/972C8/bucket-webapp) webapp. The frontend is developed using a simple custom HTML bundler written in [Go](https://go.dev) that produces static HTML files which are then integrated in the Bucket backend.
 
 Read the [Introduction](#introdution) to learn more about how the bundler works and how to create components. For instructions on how to use bundler CLI, consult [Usage](#usage). If you want to build the bundler yourself (e.g. for a different platform), see [Build](#build).
 
