@@ -10,18 +10,24 @@ import (
 	"github.com/otiai10/copy"
 )
 
-type Flex struct {
+type Bundler struct {
 	Components map[string]bool
 	Source     string
 	Target     string
 }
 
-func (f *Flex) componentPath(name string) string {
+// utility to resolve component path by name
+func (f *Bundler) componentPath(name string) string {
 	filename := fmt.Sprintf("%s.html", name)
 	return path.Join(f.Source, "components", filename)
 }
 
-func (f *Flex) bundle() {
+// for each file in the source directory
+// 		read the file
+//		load linked components, replace props, cleanup file
+// 		write file to target directory
+// copy static files to target directory
+func (f *Bundler) bundle() {
 	start := time.Now()
 	fmt.Println("[INFO] Loading components...")
 
@@ -49,16 +55,18 @@ func (f *Flex) bundle() {
 	fmt.Printf("[INFO] %d components loaded in %dms.\n", len(f.Components), duration)
 }
 
-func (f *Flex) copyStatic() {
-	// copy static files to dist dir
+// copy static files to target dir
+func (f *Bundler) copyStatic() {
 	sourcePath := "static"
-	targetPath := path.Join("dist", "static")
+	targetPath := path.Join(f.Target, "static")
+
 	if err := copy.Copy(sourcePath, targetPath); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func (f *Flex) loadComponent(name string, props string) *File {
+// load component by (file)name and return it
+func (f *Bundler) loadComponent(name string, props string) *File {
 	// add to components set
 	f.Components[name] = true
 
@@ -67,7 +75,8 @@ func (f *Flex) loadComponent(name string, props string) *File {
 	return component
 }
 
-func (f *Flex) ClearTarget() {
+// remove and recreate target directory
+func (f *Bundler) ClearTarget() {
 	// remove target dir
 	if err := os.RemoveAll(f.Target); err != nil {
 		log.Fatal(err)
@@ -79,8 +88,8 @@ func (f *Flex) ClearTarget() {
 	}
 }
 
-func NewFlex(source string, target string) *Flex {
-	return &Flex{
+func NewBundler(source string, target string) *Bundler {
+	return &Bundler{
 		Components: make(map[string]bool),
 		Source:     source,
 		Target:     target,

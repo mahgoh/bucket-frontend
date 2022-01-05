@@ -10,14 +10,14 @@ import (
 
 var watcher *fsnotify.Watcher
 
-func watch(flex *Flex) {
+func watch(bundler *Bundler) {
 
 	// creates a new file watcher
 	watcher, _ = fsnotify.NewWatcher()
 	defer watcher.Close()
 
 	// starting at the root of the project, walk each file/directory searching for directories
-	if err := filepath.Walk(flex.Source, watchDir); err != nil {
+	if err := filepath.Walk(bundler.Source, watchDir); err != nil {
 		fmt.Println("[ERROR] ", err)
 	}
 
@@ -29,7 +29,7 @@ func watch(flex *Flex) {
 			// watch for events
 			case event := <-watcher.Events:
 				fmt.Printf("[WATCH] File: %s Op: %s\n", event.Name, event.Op.String())
-				flex.bundle()
+				bundler.bundle()
 
 				// watch for errors
 			case err := <-watcher.Errors:

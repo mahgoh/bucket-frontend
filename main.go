@@ -35,21 +35,19 @@ func main() {
 	}
 
 	// Bundle HTML
-	f := NewFlex("src", "dist")
-	f.bundle()
+	b := NewBundler("src", "dist")
+	b.bundle()
 
 	// Watch for file changes
 	if flagWatch {
 		serve()
 		fmt.Println("[INFO] Watching file changes...")
-		watch(f)
+		watch(b)
 	}
 }
 
-/*
-* Print version
-* (git describe --tags --dirty)
- */
+// Print program version
+// is passed by the compiler
 func cmdVersion() {
 	fmt.Println(GitSemverStr)
 }

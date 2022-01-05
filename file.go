@@ -10,18 +10,18 @@ import (
 )
 
 type File struct {
-	Flex  *Flex
-	Path  string
-	Props string
-	In    string
-	Out   string
+	Bundler *Bundler
+	Path    string
+	Props   string
+	In      string
+	Out     string
 }
 
-func NewFile(flex *Flex, path string, props string) *File {
+func NewFile(bundler *Bundler, path string, props string) *File {
 	return &File{
-		Flex:  flex,
-		Path:  path,
-		Props: props,
+		Bundler: bundler,
+		Path:    path,
+		Props:   props,
 	}
 }
 
@@ -31,6 +31,7 @@ func (f *File) Load() {
 	f.LoadDependencies()
 }
 
+// reads file contents
 func (f *File) Read() {
 	data, err := os.ReadFile(f.Path)
 	if err != nil {
@@ -40,15 +41,17 @@ func (f *File) Read() {
 	f.Out = string(data)
 }
 
+// writes output contents to file in target directory
 func (f *File) Write() {
 	sourcePath := strings.Split(f.Path, "/")
 	filename := sourcePath[len(sourcePath)-1]
-	filepath := path.Join(f.Flex.Target, filename)
+	filepath := path.Join(f.Bundler.Target, filename)
 	if err := os.WriteFile(filepath, []byte(f.Out), 0644); err != nil {
 		log.Fatal(err)
 	}
 }
 
+// replace prop placeholders with provided props
 func (f *File) LoadProps() {
 	pattern := regexp.MustCompile(`{{[\s]?\$([0-9]+)[\s]?}}`)
 	matches := pattern.FindAllStringSubmatch(f.Out, -1)
@@ -70,6 +73,7 @@ func (f *File) LoadProps() {
 	}
 }
 
+// load additional components
 func (f *File) LoadDependencies() {
 	pattern := regexp.MustCompile(`<component name="([a-z-]+)" (?:props="([a-zA-Z0-9;.\s!-]+)" )?/>`)
 	matches := pattern.FindAllStringSubmatch(f.Out, -1)
@@ -79,11 +83,12 @@ func (f *File) LoadDependencies() {
 	}
 
 	for _, match := range matches {
-		component := f.Flex.loadComponent(match[1], match[2])
+		component := f.Bundler.loadComponent(match[1], match[2])
 		f.Out = strings.ReplaceAll(f.Out, match[0], component.Out)
 	}
 }
 
+// remove unnecessaty whitespace
 func (f *File) CleanUp() {
 	// remove whitespace between tags
 	f.Out = regexp.MustCompile(`>\s+<`).ReplaceAllString(f.Out, "><")
