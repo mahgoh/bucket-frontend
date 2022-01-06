@@ -106,6 +106,20 @@ function validResult(result) {
 
 // General utility functions
 
+/**
+ * Transform a given ISO datetime string to DD.MM.YYYY format.
+ *
+ * @param {*} dateString
+ * @returns
+ */
+function parseDate(dateString, short = false) {
+  const date = new Date(dateString);
+  const options = short
+    ? { year: 'numeric', month: 'short', day: '2-digit' }
+    : { year: 'numeric', month: 'long', day: '2-digit' };
+  return date.toLocaleDateString('de-CH', options);
+}
+
 function param(key) {
   const urlSearchParams = new URLSearchParams(window.location.search);
   const params = Object.fromEntries(urlSearchParams.entries());
@@ -117,6 +131,10 @@ function param(key) {
 
 function query(identifier) {
   return document.querySelector(identifier);
+}
+
+function queryAll(identifier) {
+  return document.querySelectorAll(identifier);
 }
 
 function ready(callback) {
