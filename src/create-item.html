@@ -7,6 +7,68 @@
       <component name="pagetitle" props="Create Bucket Item" />
       <component name="form-item-create" />
       <component name="footer" />
+      <script>
+        $(document).ready(function () {
+          const watchers = [
+            {
+              identifier: '#title',
+              type: 'text',
+              required: true,
+              regexp: getRegExp('text', 3, 30),
+              message: 'Title must be 3-30 characters long.',
+            },
+            {
+              identifier: '#description',
+              type: 'text',
+              required: false,
+              regexp: getRegExp('text', 0, 128),
+              message:
+                'Description has a maximum length of 128 characters long.',
+            },
+            /* TODO: Add rule for dateToAccomplish */
+            /* TODO: Add rule for bucket */
+            {
+              identifier: '#image',
+              type: 'text',
+              required: false,
+              regexp: getRegExp('url', 0, 1024),
+              message: 'Image must be a valid url.',
+            },
+          ];
+
+          watchValues(watchers, '#submit');
+
+          query('form').addEventListener('submit', (e) => {
+            if (formIsValid()) {
+              e.preventDefault();
+
+              postBucketItem(
+                getBucketItemJSON(
+                  null,
+                  val('#title'),
+                  val('#description'),
+                  val('#dateToAccomplish'),
+                  val('#image')
+                ),
+                (result) => {
+                  if (validResult(result)) {
+                    window.location.replace(`/item/view/${result.id}`);
+                  } else {
+                    console.log(result);
+                    /* TODO: implement error reporting */
+                  }
+                },
+                (error) => {
+                  console.error(error);
+                  /* TODO: implement modal */
+                  /* $('#error-modal').modal('show');
+                  $('#error-text').text(error); */
+                }
+              );
+            }
+          });
+        });
+      </script>
     </div>
   </body>
 </html>
