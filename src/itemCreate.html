@@ -120,7 +120,10 @@
                       labelIDs.push(result.id);
                     } catch (error) {
                       console.error(error);
-                      // TODO: implement modal
+                      notify(
+                        'Label not created',
+                        `Could not create label ${label}.`
+                      );
                     }
                   }
                 }
@@ -153,7 +156,10 @@
                 // redirect(`/item/view?id=${result.id}`);
               } catch (error) {
                 console.error(error);
-                // TODO: implement modal
+                notify(
+                  'Bucket Item not created',
+                  'Could not create bucket item.'
+                );
               }
             }
           });

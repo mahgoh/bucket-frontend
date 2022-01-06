@@ -112,11 +112,12 @@
                 query('#timeline').appendChild(clone);
               });
             } else {
-              console.log('No items.');
+              // TODO: Show empty timeline
+              notify('No items', 'No bucket items to show.');
             }
           } catch (error) {
             console.error(error);
-            // TODO: implement modal
+            notify('Error Cccured', 'Could not load timeline.');
           }
         });
       </script>
