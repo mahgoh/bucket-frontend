@@ -27,7 +27,7 @@ const errorStylingRules = {
       default:
         'inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500',
       error:
-        'inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-slate-600 bg-slate-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 cursor-default',
+        'inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-slate-600 bg-slate-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 cursor-default',
     },
   ],
 };
@@ -110,4 +110,12 @@ function query(identifier) {
 
 function val(identifier) {
   return query(identifier).value;
+}
+
+function ready(callback) {
+  // Use the handy event callback
+  document.addEventListener('DOMContentLoaded', callback, { once: true });
+
+  // A fallback to window.onload, that will always work
+  window.addEventListener('load', callback, { once: true });
 }
