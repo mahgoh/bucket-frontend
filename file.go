@@ -91,7 +91,7 @@ func (f *File) LoadDependencies() {
 // remove unnecessaty whitespace
 func (f *File) CleanUp() {
 	// remove JS comments
-	f.Out = regexp.MustCompile(`//[^\n]*`).ReplaceAllString(f.Out, "")
+	f.Out = regexp.MustCompile(`//\s[^\n]*`).ReplaceAllString(f.Out, "")
 
 	// remove whitespace between tags
 	f.Out = regexp.MustCompile(`>\s+<`).ReplaceAllString(f.Out, "><")
