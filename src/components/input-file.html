@@ -6,11 +6,18 @@
     <span class="text-sm text-slate-500" id="{{$0}}-optional">{{$2}}</span>
   </div>
   <div class="mt-1" id="{{$0}}-error-parent">
-    <select
-      id="{{$0}}"
-      name="{{$0}}"
-      class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
-    ></select>
+    <div class="flex justify-center">
+      <div class="mb-3 w-96">
+        <input
+          id="{{$0}}"
+          name="{{$0}}"
+          class="form-control block w-full px-2 py-1 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:bg-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+          type="file"
+          accept="image/png, image/jpeg"
+        />
+      </div>
+    </div>
+
     <div
       class="hidden absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
       id="{{$0}}-error-icon"
