@@ -53,7 +53,7 @@
                 ),
                 (result) => {
                   if (validResult(result)) {
-                    window.location.replace(`/item/view/${result.id}`);
+                    redirect(`/item/view/${result.id}`);
                   } else {
                     console.log(result);
                     /* TODO: implement error reporting */

@@ -104,12 +104,19 @@ function validResult(result) {
   return result.id && result.id > 0;
 }
 
-function query(identifier) {
-  return document.querySelector(identifier);
+// General utility functions
+
+function param(key) {
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const params = Object.fromEntries(urlSearchParams.entries());
+
+  if (!params.hasOwnProperty(key)) throw new Error('param not set');
+
+  return params[key];
 }
 
-function val(identifier) {
-  return query(identifier).value;
+function query(identifier) {
+  return document.querySelector(identifier);
 }
 
 function ready(callback) {
@@ -118,4 +125,12 @@ function ready(callback) {
 
   // A fallback to window.onload, that will always work
   window.addEventListener('load', callback, { once: true });
+}
+
+function redirect(path) {
+  window.location.replace(path);
+}
+
+function val(identifier) {
+  return query(identifier).value;
 }
