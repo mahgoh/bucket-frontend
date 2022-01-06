@@ -4,9 +4,80 @@
   <body>
     <div id="app" class="pb-16 sm:pb-0 sm:pt-16">
       <component name="nav" props=";;-active;;;text-blue-500" />
-      <component name="pagetitle" props="Profile" />
-      <component name="profile" />
+      <component name="pagetitle" props="Edit Profile" />
+      <form class="max-w-md mx-auto p-4 sm:px-6 lg:px-8">
+        <component name="input-text" props="text;username;Username;;" />
+        <component name="input-text" props="email;email;Email;;" />
+        <component name="input-text" props="password;password;Password;;" />
+        <div class="flex gap-x-3">
+          <component name="button" props="Cancel;" />
+          <component name="button-submit" props="Update;profile" />
+        </div>
+      </form>
       <component name="footer" />
+      <script>
+        ready(async function () {
+          try {
+            const profile = await getProfile();
+
+            val('#username', profile.username);
+            val('#email', profile.email);
+
+            // TODOOOO: drop username? rather use name. or define requirements
+            const watchers = [
+              {
+                identifier: '#username',
+                type: 'text',
+                required: true,
+                regexp: getRegExp('text', 3, 30),
+                message: 'TODO',
+              },
+              {
+                identifier: '#email',
+                type: 'text',
+                required: true,
+                regexp: getRegExp('email', 0, 128),
+                message: 'Must be a valid emailaddress.',
+              },
+              {
+                identifier: '#password',
+                type: 'text',
+                required: true,
+                regexp: getRegExp('password', 8, '', ''),
+                message:
+                  'Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character.',
+              },
+            ];
+
+            watchValues(watchers, '#submit');
+
+            query('form').addEventListener('submit', async (e) => {
+              if (formIsValid()) {
+                e.preventDefault();
+
+                const payload = {
+                  username: val('#username'),
+                  email: val('#email'),
+                  password: val('#password'),
+                };
+
+                try {
+                  const result = await putProfile(payload);
+                  redirect(`/profile/edit`);
+                } catch (error) {
+                  console.error(error);
+                  notify(
+                    'Profile not updated',
+                    'Could not update profile information.'
+                  );
+                }
+              }
+            });
+          } catch (error) {
+            notify('Something went wrong', 'Could not load profile.');
+          }
+        });
+      </script>
     </div>
   </body>
 </html>

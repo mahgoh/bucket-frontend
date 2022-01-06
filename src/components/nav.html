@@ -15,7 +15,7 @@
         <div class="flex sm:space-x-8">
           <component name="nav-item{{$0}}" props="dashboard;Dashboard" />
           <component name="nav-item{{$1}}" props="timeline;Timeline" />
-          <component name="nav-item{{$2}}" props="profile;Profile" />
+          <component name="nav-item{{$2}}" props="profile/edit;Profile" />
           <a
             href="/logout"
             class="text-slate-500 hover:text-slate-700 inline-flex items-center px-1 pt-1 text-sm font-medium"
@@ -96,7 +96,7 @@
       </a>
       <a
         class="inline-flex flex-1 items-center justify-center {{$5}}"
-        href="/profile"
+        href="/profile/edit"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
