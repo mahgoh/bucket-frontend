@@ -107,7 +107,7 @@ function validResult(result) {
 // General utility functions
 
 /**
- * Transform a given ISO datetime string to DD.MM.YYYY format.
+ * Transform a given ISO datetime string to DD. Januar YYYY format.
  *
  * @param {*} dateString
  * @returns
@@ -140,9 +140,6 @@ function queryAll(identifier) {
 function ready(callback) {
   // Use the handy event callback
   document.addEventListener('DOMContentLoaded', callback, { once: true });
-
-  // A fallback to window.onload, that will always work
-  window.addEventListener('load', callback, { once: true });
 }
 
 function redirect(path) {
