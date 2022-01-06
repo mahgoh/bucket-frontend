@@ -4,7 +4,9 @@
   <div class="max-w-5xl mx-auto h-full px-2 sm:px-6 lg:px-8">
     <!-- desktop nav -->
     <div class="hidden relative sm:flex justify-between h-full">
-      <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-between">
+      <div
+        class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-between"
+      >
         <div class="flex flex-shrink-0 items-center">
           <div class="font-bold text-blue-500 text-lg">
             <a href="/">BUCKET</a>
@@ -15,7 +17,7 @@
           <component name="nav-item{{$1}}" props="timeline;Timeline" />
           <component name="nav-item{{$2}}" props="profile;Profile" />
           <a
-            href="logout.html"
+            href="/logout"
             class="text-slate-500 hover:text-slate-700 inline-flex items-center px-1 pt-1 text-sm font-medium"
           >
             <svg
@@ -61,7 +63,10 @@
           <rect x="10" y="12" width="4" height="4"></rect>
         </svg>
       </a>
-      <a class="inline-flex flex-1 items-center justify-center {{$4}}" href="/timeline">
+      <a
+        class="inline-flex flex-1 items-center justify-center {{$4}}"
+        href="/timeline"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="icon icon-tabler icon-tabler-directions"
@@ -75,14 +80,21 @@
           stroke-linejoin="round"
         >
           <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-          <path d="M9 5h10l2 2l-2 2h-10a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1"></path>
-          <path d="M13 13h-7l-2 2l2 2h7a1 1 0 0 0 1 -1v-2a1 1 0 0 0 -1 -1"></path>
+          <path
+            d="M9 5h10l2 2l-2 2h-10a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1"
+          ></path>
+          <path
+            d="M13 13h-7l-2 2l2 2h7a1 1 0 0 0 1 -1v-2a1 1 0 0 0 -1 -1"
+          ></path>
           <line x1="12" y1="22" x2="12" y2="17"></line>
           <line x1="12" y1="13" x2="12" y2="9"></line>
           <line x1="12" y1="5" x2="12" y2="3"></line>
         </svg>
       </a>
-      <a class="inline-flex flex-1 items-center justify-center {{$5}}" href="/profile">
+      <a
+        class="inline-flex flex-1 items-center justify-center {{$5}}"
+        href="/profile"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="icon icon-tabler icon-tabler-user"
