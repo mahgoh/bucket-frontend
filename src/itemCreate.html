@@ -25,9 +25,9 @@
               message:
                 'Description has a maximum length of 128 characters long.',
             },
-            /* TODO: Add rule for dateToAccomplish */
-            /* TODO: Add rule for bucket */
-            /* TODO: Replace rule for image */
+            // TODO: Add rule for dateToAccomplish
+            // TODO: Add rule for bucket
+            // TODO: Replace rule for image
             {
               identifier: '#image',
               type: 'text',
@@ -53,17 +53,17 @@
                 ),
                 (result) => {
                   if (validResult(result)) {
-                    redirect(`/item/view/${result.id}`);
+                    redirect(`/item/view?id=${result.id}`);
                   } else {
+                    // TODO: implement error reporting
                     console.log(result);
-                    /* TODO: implement error reporting */
                   }
                 },
                 (error) => {
                   console.error(error);
-                  /* TODO: implement modal */
-                  /* $('#error-modal').modal('show');
-                  $('#error-text').text(error); */
+                  // TODO: implement modal
+                  // $('#error-modal').modal('show');
+                  // $('#error-text').text(error);
                 }
               );
             }
