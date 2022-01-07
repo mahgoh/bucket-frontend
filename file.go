@@ -75,7 +75,7 @@ func (f *File) LoadProps() {
 
 // load additional components
 func (f *File) LoadDependencies() {
-	pattern := regexp.MustCompile(`<component[\s\n\r]+name="([a-z-]+)"[\s\n\r]+(?:props="([a-zA-Z0-9/;.\s!-]+)"[\s\n\r]*)?/>`)
+	pattern := regexp.MustCompile(`<component[^>]+name="([a-z-]+)"[\s\n\r]+(?:props="([a-zA-Z0-9/;.\s!-]+)")[^>]*?/>`)
 	matches := pattern.FindAllStringSubmatch(f.Out, -1)
 
 	if matches == nil {
