@@ -6,6 +6,121 @@
       <component name="nav" props=";-active;;;text-blue-500;" />
       <component name="pagetitle" props="Timeline" />
       <component name="timeline" />
+      <component name="foot" />
+      <template id="timeline-item">
+        <div
+          class="relative mb-4 sm:mb-6 transform transition-all translate-y-12 ease-out duration-500 opacity-0"
+          data-replace='{"translate-y-12": "translate-y-0", "opacity-0": "opacity-100"}'
+        >
+          <div
+            class="w-4 sm:w-6 md:w-8 h-0.5 sm:h-1 bg-slate-200 absolute z-30 left-0 top-1/2 transform -translate-y-1/2 -translate-x-full"
+          ></div>
+          <div class="border rounded-md sm:rounded-xl overflow-hidden">
+            <div data-image-container>
+              <img data-image />
+            </div>
+            <div class="p-4 sm:p-6">
+              <div class="font-bold sm:text-xl" data-title></div>
+              <div
+                class="sm:mt-1 text-slate-500 sm:text-lg"
+                data-description
+              ></div>
+              <div class="pt-4 text-sm sm:text-base">
+                <span
+                  class="font-medium py-1 px-2 rounded-md"
+                  data-bucket
+                ></span>
+                <span
+                  class="ml-2 text-slate-700"
+                  data-date-to-accomplish
+                ></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+      <script>
+        ready(async function () {
+          try {
+            const items = await getBucketItems();
+            if (items.length > 0) {
+              items.sort((a, b) => {
+                return a.dateToAccomplish > b.dateToAccomplish
+                  ? -1
+                  : a.dateToAccomplish < b.dateToAccomplish
+                  ? 1
+                  : 0;
+              });
+
+              items.forEach((item) => {
+                const rules = [
+                  {
+                    key: 'title',
+                    textContent: item.title,
+                  },
+                  {
+                    key: 'description',
+                    textContent: item.description,
+                  },
+                  ,
+                  {
+                    key: 'bucket',
+                    textContent: item.bucket.name,
+                    classes: [
+                      `bg-${item.bucket.color}-100`,
+                      `text-${item.bucket.color}-700`,
+                    ],
+                  },
+                ];
+
+                if (item.dateToAccomplish !== '') {
+                  rules.push({
+                    key: 'date-to-accomplish',
+                    textContent: parseDate(item.dateToAccomplish),
+                  });
+                }
+
+                if (item.image != null) {
+                  rules.push({
+                    key: 'image',
+                    src: `/api/images/${item.image.id}`,
+                  });
+                } else {
+                  rules.push({
+                    key: 'image-container',
+                    classes: ['hidden'],
+                  });
+                }
+
+                const template = query('#timeline-item');
+
+                rules.forEach((rule) => {
+                  if (rule.textContent) {
+                    template.content.querySelector(
+                      `[data-${rule.key}]`
+                    ).textContent = rule.textContent;
+                  }
+
+                  if (rule.classes) {
+                    template.content
+                      .querySelector(`[data-${rule.key}]`)
+                      .classList.add(...rule.classes);
+                  }
+                });
+
+                const clone = document.importNode(template.content, true);
+                query('#timeline').appendChild(clone);
+              });
+            } else {
+              // TODO: Show empty timeline
+              notify('No items', 'No bucket items to show.');
+            }
+          } catch (error) {
+            console.error(error);
+            notify('Error Cccured', 'Could not load timeline.');
+          }
+        });
+      </script>
     </div>
   </body>
 </html>

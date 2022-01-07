@@ -11,16 +11,16 @@
 /**
  * animates elements in the viewport on page load
  */
-document.addEventListener('DOMContentLoaded', function () {
+ready(function () {
   // Add a short delay, because the images are loaded later, which causes element to be in the viewport
   // that would be not once the image is loaded.
-  setTimeout(animateElementsInViewport, 250)
-})
+  setTimeout(animateElementsInViewport, 250);
+});
 
 /**
  * animates elements in the viewport on scrolling
  */
-document.addEventListener('scroll', animateElementsInViewport)
+document.addEventListener('scroll', animateElementsInViewport);
 
 /**
  * loop through all elements with a data-replace attribute
@@ -29,13 +29,13 @@ document.addEventListener('scroll', animateElementsInViewport)
  * to eliminate future checks
  */
 function animateElementsInViewport() {
-  const replacers = document.querySelectorAll('[data-replace]')
+  const replacers = queryAll('[data-replace]');
 
   replacers.forEach((replacer) => {
     if (isInViewport(replacer)) {
-      animateElement(replacer)
+      animateElement(replacer);
     }
-  })
+  });
 }
 
 /**
@@ -47,12 +47,12 @@ function animateElementsInViewport() {
  * @param {DOMElement} element
  */
 function animateElement(element) {
-  let replaceClasses = JSON.parse(element.dataset.replace.replace(/'/g, '"'))
+  let replaceClasses = JSON.parse(element.dataset.replace.replace(/'/g, '"'));
   Object.keys(replaceClasses).forEach(function (key) {
-    element.classList.remove(key)
-    element.classList.add(replaceClasses[key])
-  })
-  delete element.dataset.replace
+    element.classList.remove(key);
+    element.classList.add(replaceClasses[key]);
+  });
+  delete element.dataset.replace;
 }
 
 /**
@@ -64,12 +64,13 @@ function animateElement(element) {
  * @returns boolean
  */
 function isInViewport(element) {
-  const rect = element.getBoundingClientRect()
+  const rect = element.getBoundingClientRect();
   return (
     rect.top >= 0 &&
     rect.left >= 0 &&
     rect.bottom <=
-      (window.innerHeight || document.documentElement.clientHeight) + element.clientHeight / 2 &&
+      (window.innerHeight || document.documentElement.clientHeight) +
+        element.clientHeight / 2 &&
     rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-  )
+  );
 }

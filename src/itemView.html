@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <component name="head" />
+  <body>
+    <div id="app" class="pb-16 sm:pb-0 sm:pt-16">
+      <component name="nav" props="-active;;;text-blue-500;;" />
+      <component name="pagetitle" props="Bucket Item" />
+      <!-- TODO: add detail view -->
+      <div class="max-w-2xl mx-auto grid grid-cols-2">
+        <span class="font-bold">ID:</span>
+        <span id="id"></span>
+        <span class="font-bold">Title:</span>
+        <span id="title"></span>
+        <span class="font-bold">Description:</span>
+        <span id="description"></span>
+        <span class="font-bold">Date to accomplish:</span>
+        <span id="dateToAccomplish"></span>
+      </div>
+      <component name="footer" />
+      <script>
+        ready(function () {
+          try {
+            const id = param('id');
+
+            getBucketItem(id, (result) => {
+              query('#id').textContent = result.id;
+              query('#title').textContent = result.title;
+              query('#description').textContent = result.description;
+              query('#dateToAccomplish').textContent = result.dateToAccomplish;
+            });
+
+            // TODO: fetch item
+            // TODO: redirect if error
+            // TODO: display item
+          } catch (e) {
+            redirect('/');
+          }
+        });
+      </script>
+    </div>
+  </body>
+</html>
