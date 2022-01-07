@@ -1,3 +1,31 @@
+const resources = {
+  colors: [
+    'red',
+    'orange',
+    'amber',
+    'yellow',
+    'lime',
+    'green',
+    'emerald',
+    'teal',
+    'cyan',
+    'sky',
+    'blue',
+    'indigo',
+    'violet',
+    'purple',
+    'fuchsia',
+    'pink',
+    'rose',
+    'gray',
+  ],
+  icons: ['brand-windows'],
+};
+
+function resource(key) {
+  return resources[key];
+}
+
 const errorStylingRules = {
   text: [
     {

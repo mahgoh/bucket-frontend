@@ -18,27 +18,8 @@
       <component name="footer" />
       <script>
         ready(async function () {
-          const colors = [
-            'red',
-            'orange',
-            'amber',
-            'yellow',
-            'lime',
-            'green',
-            'emerald',
-            'teal',
-            'cyan',
-            'sky',
-            'blue',
-            'indigo',
-            'violet',
-            'purple',
-            'fuchsia',
-            'pink',
-            'rose',
-            'gray',
-          ];
-          const icons = ['brand-windows'];
+          const colors = resource('colors');
+          const icons = resource('icons');
 
           const select = query('#color');
 
@@ -89,12 +70,9 @@
                 icon
               );
 
-              console.log(payload);
-
               try {
                 const result = await postBucket(payload);
-                console.log(result);
-                // redirect(`/item/view?id=${result.id}`);
+                redirect(`/bucket/view?id=${result.id}`);
               } catch (error) {
                 console.error(error);
                 notify('Bucket not created', 'Could not create bucket.');
