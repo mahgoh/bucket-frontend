@@ -55,17 +55,16 @@ function watchValue(watcher, submit) {
 }
 
 function validateAndFeedback(watcher, value, submit) {
-  const { identifier, type, regexp, message, required } = watcher;
+  const { identifier, type, message, required, validator } = watcher;
 
-  isValid[identifier] =
-    !required && value === '' ? true : validate(regexp, value);
+  isValid[identifier] = !required && value === '' ? true : validator(value);
   setErrorMessage(identifier, message);
   setAppearance(identifier, type, isValid[identifier]);
   setSubmit(submit);
 }
 
-function validate(regexp, value) {
-  return regexp.test(value);
+function validateRegex(regex, value) {
+  return regex.test(value);
 }
 
 function setErrorMessage(identifier, message) {
@@ -90,7 +89,7 @@ function setSubmit(identifier) {
   setAppearance(identifier, 'submit', valid);
 }
 
-const regExpPresets = {
+const regexPresets = {
   default: '^[a-z0-9\\s]{MIN,MAX}$',
   number: '[0-9]+',
   text: "^[a-z0-9äöüéèà.:,;'!?()=$\\s_-]{MIN,MAX}$",
@@ -101,11 +100,11 @@ const regExpPresets = {
   url: 'https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)',
 };
 
-function getRegExp(key, min, max, flags = 'i') {
-  if (!regExpPresets.hasOwnProperty(key)) key = 'default';
+function regexPreset(preset, min, max, flags = 'i') {
+  if (!regexPresets.hasOwnProperty(preset)) preset = 'default';
 
   return new RegExp(
-    regExpPresets[key].replace('MIN', min).replace('MAX', max),
+    regexPresets[preset].replace('MIN', min).replace('MAX', max),
     flags
   );
 }

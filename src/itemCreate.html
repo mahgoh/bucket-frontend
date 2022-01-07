@@ -52,39 +52,44 @@
               identifier: '#title',
               type: 'text',
               required: true,
-              regexp: getRegExp('text', 3, 30),
               message: 'Title must be 3-30 characters long.',
+              validator: (value) =>
+                validateRegex(regexPreset('text', 3, 30), value),
             },
             {
               identifier: '#description',
               type: 'text',
               required: false,
-              regexp: getRegExp('text', 0, 128),
               message:
                 'Description has a maximum length of 128 characters long.',
+              validator: (value) =>
+                validateRegex(regexPreset('text', 0, 128), value),
             },
             // TODO: Add rule for dateToAccomplish
             {
               identifier: '#bucket',
               type: 'text',
               required: false,
-              regexp: getRegExp('number', 0, 0),
               message: 'Bucket must be selected.',
+              validator: (value) =>
+                validateRegex(regexPreset('number', 0, 0), value),
             },
             // TODO: Replace rule for image
             {
               identifier: '#image',
               type: 'text',
               required: false,
-              regexp: getRegExp('url', 0, 1024),
               message: 'Image must be a valid url.',
+              validator: (value) =>
+                validateRegex(regexPreset('url', 0, 1024), value),
             },
             {
               identifier: '#labels',
               type: 'text',
               required: false,
-              regexp: getRegExp('labels', 0, 0),
               message: 'Labels must be a space-separated list - dash allowed.',
+              validator: (value) =>
+                validateRegex(regexPreset('labels', 0, 0), value),
             },
           ];
 
