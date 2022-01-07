@@ -92,29 +92,7 @@
                   });
                 }
 
-                const template = query('#timeline-item');
-
-                rules.forEach((rule) => {
-                  if (rule.textContent) {
-                    template.content.querySelector(
-                      `[data-${rule.key}]`
-                    ).textContent = rule.textContent;
-                  }
-
-                  if (rule.classes) {
-                    template.content
-                      .querySelector(`[data-${rule.key}]`)
-                      .classList.add(...rule.classes);
-                  }
-
-                  if (rule.src) {
-                    template.content.querySelector(`[data-${rule.key}]`).src =
-                      rule.src;
-                  }
-                });
-
-                const clone = document.importNode(template.content, true);
-                query('#timeline').appendChild(clone);
+                renderTemplate('#timeline-item', rules, '#timeline');
               });
             } else {
               // TODO: Show empty timeline

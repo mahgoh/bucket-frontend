@@ -252,3 +252,29 @@ function animateIn(identifier) {
 function animateOut(identifier) {
   query(identifier).classList.add('translate-x-24', 'opacity-0');
 }
+
+// Template
+
+function template(identifier, rules, parent) {
+  const template = query(identifier);
+
+  rules.forEach((rule) => {
+    if (rule.textContent) {
+      template.content.querySelector(`[data-${rule.key}]`).textContent =
+        rule.textContent;
+    }
+
+    if (rule.classes) {
+      template.content
+        .querySelector(`[data-${rule.key}]`)
+        .classList.add(...rule.classes);
+    }
+
+    if (rule.src) {
+      template.content.querySelector(`[data-${rule.key}]`).src = rule.src;
+    }
+  });
+
+  const clone = document.importNode(template.content, true);
+  query(parent).appendChild(clone);
+}
