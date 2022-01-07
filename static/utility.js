@@ -76,9 +76,12 @@ function watchValues(watchers, submit) {
 
 function watchValue(watcher, submit) {
   validateAndFeedback(watcher, val(watcher.identifier), submit);
+  if (watcher.colorize) colorize(watcher, val(watcher.identifier));
 
-  query(watcher.identifier).addEventListener('keyup', (e) => {
+  let event = watcher.event || 'keyup';
+  query(watcher.identifier).addEventListener(event, (e) => {
     validateAndFeedback(watcher, e.target.value, submit);
+    if (watcher.colorize) colorize(watcher, e.target.value);
   });
 }
 
@@ -115,6 +118,12 @@ function setSubmit(identifier) {
 
   query(identifier).disabled = !valid;
   setAppearance(identifier, 'submit', valid);
+}
+
+function colorize(watcher, color) {
+  let classes = query(watcher.identifier).className;
+  classes = classes.replace(/text-[a-z]+-500/, '');
+  query(watcher.identifier).className = `${classes} text-${color}-500`;
 }
 
 const regexPresets = {

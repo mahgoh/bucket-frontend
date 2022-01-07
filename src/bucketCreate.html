@@ -25,8 +25,11 @@
 
           colors.forEach((color) => {
             let option = document.createElement('option');
+
             option.textContent = color.charAt(0).toUpperCase() + color.slice(1);
             option.setAttribute('value', color);
+            option.classList.add(`text-${color}-500`);
+
             select.appendChild(option);
           });
 
@@ -44,6 +47,8 @@
               type: 'text',
               required: true,
               message: 'Invalid color.',
+              event: 'change',
+              colorize: true,
               validator: (value) => colors.includes(value),
             },
             {
