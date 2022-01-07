@@ -71,6 +71,7 @@
               type: 'text',
               required: false,
               message: 'Bucket must be selected.',
+              event: 'change',
               validator: (value) =>
                 validateRegex(regexPreset('number', 0, 0), value),
             },

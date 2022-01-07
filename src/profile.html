@@ -29,23 +29,26 @@
                 identifier: '#username',
                 type: 'text',
                 required: true,
-                regexp: getRegExp('text', 3, 30),
                 message: 'TODO',
+                validator: (value) =>
+                  validateRegex(regexPreset('text', 3, 30), value),
               },
               {
                 identifier: '#email',
                 type: 'text',
                 required: true,
-                regexp: getRegExp('email', 0, 128),
                 message: 'Must be a valid emailaddress.',
+                validator: (value) =>
+                  validateRegex(regexPreset('email', 0, 128), value),
               },
               {
                 identifier: '#password',
                 type: 'text',
                 required: true,
-                regexp: getRegExp('password', 8, '', ''),
                 message:
                   'Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character.',
+                validator: (value) =>
+                  validateRegex(regexPreset('password', 8, '', ''), value),
               },
             ];
 
