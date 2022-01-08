@@ -7,6 +7,22 @@
       <component name="pagetitle" props="Timeline" />
       <component name="timeline" />
       <component name="foot" />
+      <template id="timeline-year">
+        <div
+          class="relative mb-4 sm:mb-6 transform transition-all translate-y-12 ease-out duration-500 opacity-0"
+          data-replace='{"translate-y-12": "translate-y-0", "opacity-0": "opacity-100"}'
+        >
+          <div
+            class="w-4 sm:w-6 md:w-8 h-0.5 sm:h-1 bg-slate-200 absolute z-30 left-0 top-1/2 transform -translate-y-1/2 -translate-x-full"
+          ></div>
+          <div class="p-4 sm:p-6">
+            <div
+              class="text-xl sm:text-2xl text-slate-700 font-bold"
+              data-year
+            ></div>
+          </div>
+        </div>
+      </template>
       <template id="timeline-item">
         <div
           class="relative mb-4 sm:mb-6 transform transition-all translate-y-12 ease-out duration-500 opacity-0"
@@ -17,24 +33,28 @@
           ></div>
           <div class="border rounded-md sm:rounded-xl overflow-hidden">
             <div data-image-container>
-              <img data-image />
+              <img data-image class="object-cover w-full min-h-72 max-h-80" />
             </div>
             <div class="p-4 sm:p-6">
-              <div class="font-bold sm:text-xl" data-title></div>
+              <a class="font-bold sm:text-xl hover:underline" data-title></a>
               <div
                 class="sm:mt-1 text-slate-500 sm:text-lg"
                 data-description
               ></div>
               <div class="pt-4 text-sm sm:text-base">
-                <span
-                  class="font-medium py-1 px-2 rounded-md"
-                  data-bucket
-                ></span>
-                <span
-                  class="ml-2 text-slate-700"
-                  data-date-to-accomplish
-                ></span>
+                <a
+                  class="font-medium py-1 px-3 rounded-md hover:underline"
+                  data-color
+                >
+                  <i class="ti mr-2" data-icon></i>
+                  <span data-bucket></span>
+                </a>
+                <span class="ml-2 text-slate-700" data-labels></span>
               </div>
+              <div
+                class="pt-4 text-sm sm:text-base text-slate-600"
+                data-date
+              ></div>
             </div>
           </div>
         </div>
@@ -42,48 +62,93 @@
       <script>
         ready(async function () {
           try {
-            const items = await getBucketItems();
+            const items = await API.getBucketItems('?completed=true');
             if (items.length > 0) {
-              items.sort((a, b) => {
-                return a.dateToAccomplish > b.dateToAccomplish
-                  ? -1
-                  : a.dateToAccomplish < b.dateToAccomplish
-                  ? 1
-                  : 0;
+              const sortedItems = Format.sort(
+                items,
+                'dateAccomplishedOn',
+                true
+              );
+
+              const itemGroups = Format.groupByYear(
+                sortedItems,
+                'dateAccomplishedOn'
+              );
+              const sortedItemGroups = Format.sort(itemGroups, 'year', true);
+
+              sortedItemGroups.forEach((group) => {
+                const headingRules = [
+                  {
+                    key: 'year',
+                    textContent: group.year,
+                  },
+                ];
+
+                Template.render('#timeline-year', headingRules, '#timeline');
+
+                group.items.forEach((item) => {
+                  renderItem(item);
+                });
               });
 
-              items.forEach((item) => {
+              function renderItem(item) {
                 const rules = [
                   {
                     key: 'title',
                     textContent: item.title,
+                    href: `/item/view?id=${item.id}`,
                   },
                   {
                     key: 'description',
                     textContent: item.description,
                   },
-                  ,
+
                   {
                     key: 'bucket',
                     textContent: item.bucket.name,
+                  },
+                  {
+                    key: 'color',
                     classes: [
                       `bg-${item.bucket.color}-100`,
                       `text-${item.bucket.color}-700`,
                     ],
+                    href: `/item?bucketId=${item.bucket.id}`,
                   },
                 ];
 
-                if (item.dateToAccomplish !== '') {
+                if (item.bucket.icon !== null) {
                   rules.push({
-                    key: 'date-to-accomplish',
-                    textContent: parseDate(item.dateToAccomplish),
+                    key: 'icon',
+                    classes: [`ti-${item.bucket.icon}`],
+                  });
+                }
+
+                if (item.labels.length > 0) {
+                  rules.push({
+                    key: 'labels',
+                    html: item.labels
+                      .map(
+                        (label) =>
+                          `<a href="/item?labelId=${label.id}" class="text-slate-700 underline-none hover:underline">#${label.name}</a>`
+                      )
+                      .join(' '),
+                  });
+                }
+
+                if (item.dateAccomplishedOn !== null) {
+                  rules.push({
+                    key: 'date',
+                    textContent: `Accomplished on ${Format.parseDate(
+                      item.dateAccomplishedOn
+                    )}`,
                   });
                 }
 
                 if (item.image != null) {
                   rules.push({
                     key: 'image',
-                    src: `/api/images/${item.image.id}`,
+                    src: `/api/bucket-items/images/${item.id}`,
                   });
                 } else {
                   rules.push({
@@ -92,15 +157,15 @@
                   });
                 }
 
-                renderTemplate('#timeline-item', rules, '#timeline');
-              });
+                Template.render('#timeline-item', rules, '#timeline');
+              }
             } else {
               // TODO: Show empty timeline
-              notify('No items', 'No bucket items to show.');
+              Notification.notify('No items', 'No bucket items to show.');
             }
           } catch (error) {
             console.error(error);
-            notify('Error Cccured', 'Could not load timeline.');
+            Notification.notify('Error Cccured', 'Could not load timeline.');
           }
         });
       </script>

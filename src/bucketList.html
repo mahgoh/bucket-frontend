@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <component name="head" />
+  <body>
+    <div id="app" class="pb-16 sm:pb-0 sm:pt-16">
+      <component name="nav" props="-active;;;text-blue-500;;" />
+      <component name="pagetitle" props="Buckets" />
+      <div
+        id="buckets"
+        class="max-w-2xl mx-auto divide-y divide-slate-100"
+      ></div>
+      <component name="button" props="Create;bucket/create" />
+      <template id="bucket">
+        <div
+          class="grid grid-cols-3 sm:grid-cols-5 p-2 px-3 sm:p-3 items-center"
+        >
+          <div data-name class="sm:col-span-2 font-bold"></div>
+          <div class="text-sm">
+            <span
+              class="inline-block font-medium py-1 px-2 rounded-md"
+              data-color
+            ></span>
+          </div>
+          <div class="hidden sm:block">
+            <i class="ti" data-icon></i>
+          </div>
+          <div class="flex justify-end gap-x-2 sm:gap-x-4">
+            <component name="button" props="Edit;;edit" />
+            <component name="button-delete" props="Delete;;delete" />
+          </div>
+        </div>
+      </template>
+      <component name="footer" />
+      <component name="modal" />
+      <script>
+        async function deleteBucket(id) {
+          try {
+            await API.deleteBucket(id);
+            redirect('/bucket');
+          } catch (e) {
+            Notification.notify(
+              'Bucket not deleted',
+              'Could not delete the bucket. Try again later.'
+            );
+          }
+        }
+
+        ready(async function () {
+          try {
+            const buckets = await API.getBuckets();
+
+            buckets.forEach((bucket) => {
+              const rules = [
+                {
+                  key: 'name',
+                  textContent: bucket.name,
+                },
+                {
+                  key: 'color',
+                  textContent: Format.capitalize(bucket.color),
+                  classes: [
+                    `bg-${bucket.color}-100`,
+                    `text-${bucket.color}-700`,
+                  ],
+                },
+                {
+                  key: 'edit',
+                  href: `/bucket/edit?id=${bucket.id}`,
+                },
+                {
+                  key: 'delete',
+                  listener() {
+                    Modal.confirm(
+                      'Delete Bucket?',
+                      `Do you really want to delete the bucket '${bucket.name}'? This action cannot be undone.`,
+                      async () => {
+                        await deleteBucket(bucket.id);
+                      }
+                    );
+                  },
+                },
+              ];
+
+              if (bucket.icon !== null) {
+                rules.push({
+                  key: 'icon',
+                  classes: [`ti-${bucket.icon}`],
+                });
+              }
+
+              Template.render('#bucket', rules, '#buckets');
+            });
+          } catch (e) {
+            console.log(e);
+            Notification.notify(
+              'Something went wrong',
+              'Could not load buckets.'
+            );
+          }
+        });
+      </script>
+    </div>
+  </body>
+</html>

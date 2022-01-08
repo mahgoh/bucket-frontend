@@ -8,9 +8,9 @@
       <form class="max-w-md mx-auto p-4 sm:px-6 lg:px-8">
         <component name="input-text" props="text;name;Name;;" />
         <component name="input-select" props="color;Color;" />
-        <component name="input-text" props="text;icon;Icon;;Optional" />
+        <component name="input-select" props="icon;Icon;" />
         <div class="flex gap-x-3">
-          <component name="button" props="Cancel;" />
+          <component name="button" props="Cancel;bucket" />
           <component name="button-submit" props="Create;" />
         </div>
       </form>
@@ -18,19 +18,28 @@
       <component name="footer" />
       <script>
         ready(async function () {
-          const colors = resource('colors');
-          const icons = resource('icons');
+          const colors = Store.get('colors');
+          const icons = Store.get('icons');
 
-          const select = query('#color');
-
+          const colorSelect = query('#color');
           colors.forEach((color) => {
             let option = document.createElement('option');
 
-            option.textContent = color.charAt(0).toUpperCase() + color.slice(1);
+            option.textContent = Format.capitalize(color);
             option.setAttribute('value', color);
             option.classList.add(`text-${color}-500`);
 
-            select.appendChild(option);
+            colorSelect.appendChild(option);
+          });
+
+          const iconSelect = query('#icon');
+          icons.forEach((icon) => {
+            let option = document.createElement('option');
+
+            option.textContent = icon;
+            option.setAttribute('value', icon);
+
+            iconSelect.appendChild(option);
           });
 
           const watchers = [
@@ -40,7 +49,7 @@
               required: true,
               message: 'Name must be 3-30 characters long.',
               validator: (value) =>
-                validateRegex(regexPreset('text', 3, 30), value),
+                Regex.validate(Regex.preset('text', 3, 30), value),
             },
             {
               identifier: '#color',
@@ -54,16 +63,18 @@
             {
               identifier: '#icon',
               type: 'text',
-              required: false,
+              required: true,
               message: 'Invalid icon.',
+              event: 'change',
+              colorize: true,
               validator: (value) => icons.includes(value),
             },
           ];
 
-          watchValues(watchers, '#submit');
+          Form.watch(watchers, '#submit');
 
           query('form').addEventListener('submit', async (e) => {
-            if (formIsValid()) {
+            if (Form.isValid()) {
               e.preventDefault();
 
               const icon = val('#icon') !== '' ? val('#icon') : null;
@@ -76,11 +87,14 @@
               );
 
               try {
-                const result = await postBucket(payload);
-                redirect(`/bucket/view?id=${result.id}`);
+                const result = await API.postBucket(payload);
+                redirect(`/bucket`);
               } catch (error) {
                 console.error(error);
-                notify('Bucket not created', 'Could not create bucket.');
+                Notification.notify(
+                  'Bucket not created',
+                  'Could not create bucket.'
+                );
               }
             }
           });

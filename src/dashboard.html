@@ -5,8 +5,136 @@
     <div id="app" class="pb-16 sm:pb-0 sm:pt-16">
       <component name="nav" props="-active;;;text-blue-500;;" />
       <component name="pagetitle" props="Dashboard" />
-      <component name="main" />
+      <main class="max-w-5xl mx-auto p-4 sm:px-6 lg:px-8">
+        <div class="grid sm:grid-cols-3 gap-x-10 gap-y-4 grid-cols-1 mb-10">
+          <component name="dashboard-button" props="Create;item/create" />
+          <component name="dashboard-button" props="Bucket Items;item" />
+          <component name="dashboard-button" props="Buckets;bucket" />
+        </div>
+        <div id="item-container">
+          <h2 class="text-xl font-bold pb-4 sm:pb-6 text-center sm:text-left">
+            Upcoming bucket items
+          </h2>
+        </div>
+      </main>
+
+      <template id="item">
+        <div class="mb-4 sm:mb-6">
+          <div class="border rounded-md sm:rounded-xl overflow-hidden">
+            <div data-image-container>
+              <img data-image class="object-cover w-full min-h-72 max-h-80" />
+            </div>
+            <div class="p-4 sm:p-6">
+              <a class="font-bold sm:text-xl hover:underline" data-title></a>
+              <div
+                class="sm:mt-1 text-slate-500 sm:text-lg"
+                data-description
+              ></div>
+              <div class="pt-4 text-sm sm:text-base">
+                <a
+                  class="font-medium py-1 px-3 rounded-md hover:underline"
+                  data-color
+                >
+                  <i class="ti mr-2" data-icon></i>
+                  <span data-bucket></span>
+                </a>
+                <span class="ml-2 text-slate-700" data-labels></span>
+              </div>
+              <div
+                class="pt-4 text-sm sm:text-base text-slate-600"
+                data-date
+              ></div>
+            </div>
+          </div>
+        </div>
+      </template>
       <component name="footer" />
+      <script>
+        ready(async function () {
+          try {
+            const items = await API.getBucketItems('?completed=false');
+            if (items.length > 0) {
+              const sortedItems = Format.sort(items, 'dateToAccomplish');
+              const nextItems = sortedItems.slice(0, 3);
+
+              nextItems.forEach((item) => {
+                const rules = [
+                  {
+                    key: 'title',
+                    textContent: item.title,
+                    href: `/item/view?id=${item.id}`,
+                  },
+                  {
+                    key: 'description',
+                    textContent: item.description,
+                  },
+
+                  {
+                    key: 'bucket',
+                    textContent: item.bucket.name,
+                  },
+                  {
+                    key: 'color',
+                    classes: [
+                      `bg-${item.bucket.color}-100`,
+                      `text-${item.bucket.color}-700`,
+                    ],
+                    href: `/item?bucketId=${item.bucket.id}`,
+                  },
+                ];
+
+                if (item.bucket.icon !== null) {
+                  rules.push({
+                    key: 'icon',
+                    classes: [`ti-${item.bucket.icon}`],
+                  });
+                }
+
+                if (item.labels.length > 0) {
+                  rules.push({
+                    key: 'labels',
+                    html: item.labels
+                      .map(
+                        (label) =>
+                          `<a href="/item?labelId=${label.id}" class="text-slate-700 underline-none hover:underline">#${label.name}</a>`
+                      )
+                      .join(' '),
+                  });
+                }
+
+                if (item.dateToAccomplish !== null) {
+                  rules.push({
+                    key: 'date',
+                    textContent: `Accomplish by ${Format.parseDate(
+                      item.dateToAccomplish
+                    )}`,
+                  });
+                }
+
+                if (item.image != null) {
+                  rules.push({
+                    key: 'image',
+                    src: `/api/bucket-items/images/${item.id}`,
+                  });
+                } else {
+                  rules.push({
+                    key: 'image-container',
+                    classes: ['hidden'],
+                  });
+                }
+
+                Template.render('#item', rules, '#item-container');
+              });
+            }
+          } catch (error) {
+            console.error(error);
+            Notification.notify(
+              'Error Cccured',
+              'Could not load latest bucket item.'
+            );
+          }
+        });
+      </script>
     </div>
   </body>
 </html>

@@ -4,7 +4,7 @@
   <body>
     <div id="app" class="pb-16 sm:pb-0 sm:pt-16">
       <component name="nav" props="-active;;;text-blue-500;;" />
-      <component name="pagetitle" props="Create Bucket Item" />
+      <component name="pagetitle" props="Edit Bucket Item" />
       <form class="max-w-md mx-auto p-4 sm:px-6 lg:px-8">
         <component name="input-text" props="text;title;Title;;" />
         <component
@@ -16,17 +16,37 @@
           name="input-text"
           props="date;dateToAccomplish;Date to accomplish;;Optional"
         />
+        <component
+          name="input-text"
+          props="date;dateAccomplishedOn;Date accomplished on;;Optional"
+        />
         <component name="input-file" props="image;Image;Optional" />
         <component name="input-text" props="text;labels;Labels;;Optional" />
         <div class="flex gap-x-3">
-          <component name="button" props="Cancel;" />
-          <component name="button-submit" props="Create;" />
+          <component name="button" props="Cancel;;cancel" />
+          <component name="button-submit" props="Save;" />
         </div>
       </form>
 
       <component name="footer" />
       <script>
         ready(async function () {
+          let item = null;
+
+          try {
+            const id = param('id');
+            item = await API.getBucketItem(id);
+          } catch (e) {
+            redirect('/');
+          }
+
+          val('#title', item.title);
+          val('#description', item.description);
+          val('#dateToAccomplish', item.dateToAccomplish);
+          val('#dateAccomplishedOn', item.dateAccomplishedOn);
+          val('#labels', item.labels.map((label) => label.name).join(' '));
+          query('#cancel').href = `/item/view?id=${item.id}`;
+
           try {
             const buckets = await API.getBuckets();
             if (buckets.length > 0) {
@@ -36,8 +56,12 @@
 
               buckets.forEach((bucket) => {
                 let option = document.createElement('option');
+
                 option.textContent = bucket.name;
                 option.setAttribute('value', bucket.id);
+
+                if (bucket.id === item.bucket.id) option.selected = true;
+
                 select.appendChild(option);
               });
             } else {
@@ -143,8 +167,14 @@
                 dateToAccomplish = val('#dateToAccomplish');
               }
 
-              let image = null;
+              let completed = false;
+              let dateAccomplishedOn = null;
+              if (val('#dateAccomplishedOn') !== '') {
+                dateAccomplishedOn = val('#dateAccomplishedOn');
+                completed = true;
+              }
 
+              let image = item.image !== null ? item.image.id : null;
               if (query('#image').files.length > 0) {
                 const payload = {
                   image: query('#image').files[0],
@@ -155,25 +185,25 @@
               }
 
               const payload = getBucketItemPayload(
-                null,
+                item.id,
                 val('#title'),
                 val('#description'),
                 val('#bucket'),
                 dateToAccomplish,
-                null,
-                null,
+                dateAccomplishedOn,
+                completed,
                 image,
                 labelIDs
               );
 
               try {
-                const result = await API.postBucketItem(payload);
+                const result = await API.putBucketItem(item.id, payload);
                 redirect(`/item/view?id=${result.id}`);
               } catch (error) {
                 console.error(error);
                 Notification.notify(
-                  'Bucket Item not created',
-                  'Could not create bucket item.'
+                  'Bucket Item not updated',
+                  'Could not save bucket item.'
                 );
               }
             }

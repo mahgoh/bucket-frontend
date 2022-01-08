@@ -6,32 +6,197 @@
       <component name="nav" props="-active;;;text-blue-500;;" />
       <component name="pagetitle" props="Bucket Item" />
       <!-- TODO: add detail view -->
-      <div class="max-w-2xl mx-auto grid grid-cols-2">
-        <span class="font-bold">ID:</span>
-        <span id="id"></span>
-        <span class="font-bold">Title:</span>
-        <span id="title"></span>
-        <span class="font-bold">Description:</span>
-        <span id="description"></span>
-        <span class="font-bold">Date to accomplish:</span>
-        <span id="dateToAccomplish"></span>
-      </div>
+      <div id="item-container"></div>
+      <template id="item">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+          <div class="mb-4 sm:mb-6">
+            <div class="border rounded-md sm:rounded-xl overflow-hidden">
+              <div data-image-container>
+                <img data-image class="object-cover w-full min-h-72 max-h-80" />
+              </div>
+              <div class="p-4 sm:p-6">
+                <div class="font-bold sm:text-xl" data-title></div>
+                <div
+                  class="sm:mt-1 text-slate-500 sm:text-lg"
+                  data-description
+                ></div>
+                <div class="pt-4 text-sm sm:text-base">
+                  <a
+                    class="font-medium py-1 px-3 rounded-md hover:underline"
+                    data-color
+                  >
+                    <i class="ti mr-2" data-icon></i>
+                    <span data-bucket></span>
+                  </a>
+                  <span class="ml-2 text-slate-700" data-labels></span>
+                </div>
+                <div
+                  class="pt-4 text-sm sm:text-base text-slate-600"
+                  data-date
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-2 sm:gap-x-4">
+            <component name="button" props="Complete;;complete" />
+            <component name="button" props="Edit;;edit" />
+            <component name="button-delete" props="Delete;;delete" />
+          </div>
+        </div>
+      </template>
       <component name="footer" />
+      <component name="modal" />
       <script>
-        ready(function () {
+        async function deleteBucketItem(id) {
+          try {
+            await API.deleteBucketItem(id);
+            console.log(res);
+            redirect('/item');
+          } catch (e) {
+            console.log(e);
+            Notification.notify(
+              'Bucket Item not deleted',
+              'Could not delete the bucket item. Try again later.'
+            );
+          }
+        }
+
+        async function changeStatus(item, completed, dateAccomplishedOn) {
+          item.completed = completed;
+          item.dateAccomplishedOn = dateAccomplishedOn;
+
+          try {
+            let res = await API.putBucketItem(item.id, item);
+            redirect(`/item/view?id=${item.id}`);
+          } catch (e) {
+            Notification.notify(
+              'Not updated.',
+              'Could not update bucket item.'
+            );
+          }
+        }
+
+        ready(async function () {
           try {
             const id = param('id');
+            const item = await API.getBucketItem(id);
 
-            getBucketItem(id, (result) => {
-              query('#id').textContent = result.id;
-              query('#title').textContent = result.title;
-              query('#description').textContent = result.description;
-              query('#dateToAccomplish').textContent = result.dateToAccomplish;
-            });
+            const rules = [
+              {
+                key: 'title',
+                textContent: item.title,
+              },
+              {
+                key: 'description',
+                textContent: item.description,
+              },
 
-            // TODO: fetch item
-            // TODO: redirect if error
-            // TODO: display item
+              {
+                key: 'bucket',
+                textContent: item.bucket.name,
+              },
+              {
+                key: 'color',
+                classes: [
+                  `bg-${item.bucket.color}-100`,
+                  `text-${item.bucket.color}-700`,
+                ],
+                href: `/item?bucketId=${item.bucket.id}`,
+              },
+              {
+                key: 'edit',
+                href: `/item/edit?id=${item.id}`,
+              },
+              {
+                key: 'delete',
+                listener() {
+                  Modal.confirm(
+                    'Delete Bucket Item?',
+                    `Do you really want to delete the bucket item '${item.title}'? This action cannot be undone.`,
+                    async () => {
+                      await deleteBucketItem(item.id);
+                    }
+                  );
+                },
+              },
+            ];
+
+            if (item.completed) {
+              if (item.dateAccomplishedOn !== null) {
+                rules.push({
+                  key: 'date',
+                  textContent: `Accomplished on ${Format.parseDate(
+                    item.dateAccomplishedOn
+                  )}`,
+                  classes: ['text-green-500'],
+                });
+              }
+
+              rules.push({
+                key: 'complete',
+                href: '#',
+                textContent: 'Make uncomplete',
+                async listener() {
+                  await changeStatus(item, false, null);
+                },
+              });
+            } else {
+              if (item.dateToAccomplish !== null) {
+                rules.push({
+                  key: 'date',
+                  textContent: `Accomplish by ${Format.parseDate(
+                    item.dateToAccomplish
+                  )}`,
+                });
+              }
+
+              rules.push({
+                key: 'complete',
+                href: '#',
+                async listener() {
+                  Modal.prompt(
+                    'Set Accomplished',
+                    'When did you accomplish this bucket item?',
+                    async (value) => {
+                      await changeStatus(item, true, value);
+                    }
+                  );
+                },
+              });
+            }
+
+            if (item.bucket.icon !== null) {
+              rules.push({
+                key: 'icon',
+                classes: [`ti-${item.bucket.icon}`],
+              });
+            }
+
+            if (item.labels.length > 0) {
+              rules.push({
+                key: 'labels',
+                html: item.labels
+                  .map(
+                    (label) =>
+                      `<a href="/item?labelId=${label.id}" class="text-slate-700 hover:underline">#${label.name}</a>`
+                  )
+                  .join(' '),
+              });
+            }
+
+            if (item.image != null) {
+              rules.push({
+                key: 'image',
+                src: `/api/bucket-items/images/${item.id}`,
+              });
+            } else {
+              rules.push({
+                key: 'image-container',
+                classes: ['hidden'],
+              });
+            }
+
+            Template.render('#item', rules, '#item-container');
           } catch (e) {
             redirect('/');
           }
