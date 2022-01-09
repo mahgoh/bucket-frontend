@@ -21,6 +21,7 @@
           props="date;dateAccomplishedOn;Date accomplished on;;Optional"
         />
         <component name="input-file" props="image;Image;Optional" />
+        <component name="input-text" props="text;location;Location;;Optional" />
         <component name="input-text" props="text;labels;Labels;;Optional" />
         <div class="flex gap-x-3">
           <component name="button" props="Cancel;;cancel" />
@@ -44,6 +45,7 @@
           val('#description', item.description);
           val('#dateToAccomplish', item.dateToAccomplish);
           val('#dateAccomplishedOn', item.dateAccomplishedOn);
+          val('#location', Format.decodeURIComponent(item.location.address));
           val('#labels', item.labels.map((label) => label.name).join(' '));
           query('#cancel').href = `/item/view?id=${item.id}`;
 
@@ -120,6 +122,15 @@
                 Regex.validate(Regex.preset('date', null, null), value),
             },
             {
+              identifier: '#location',
+              type: 'text',
+              required: false,
+              message:
+                'Description has a maximum length of 128 characters long.',
+              validator: (value) =>
+                Regex.validate(Regex.preset('text', 0, 128), value),
+            },
+            {
               identifier: '#labels',
               type: 'text',
               required: false,
@@ -135,6 +146,64 @@
             if (Form.isValid()) {
               e.preventDefault();
 
+              // dateToAccomplish
+              let dateToAccomplish = null;
+              if (val('#dateToAccomplish') !== '') {
+                dateToAccomplish = val('#dateToAccomplish');
+              }
+
+              // completed
+              // dateAccomplishedOn
+              let completed = false;
+              let dateAccomplishedOn = null;
+              if (val('#dateAccomplishedOn') !== '') {
+                dateAccomplishedOn = val('#dateAccomplishedOn');
+                completed = true;
+              }
+
+              // image
+              let image = item.image !== null ? item.image.id : null;
+              if (query('#image').files.length > 0) {
+                const payload = {
+                  image: query('#image').files[0],
+                };
+
+                const result = await API.postBucketImage(payload);
+                image = result.id;
+              }
+
+              // location
+              let location = null;
+              if (val('#location') !== '') {
+                try {
+                  const locations = await API.getLocations();
+
+                  for (const l of locations) {
+                    if (
+                      Format.decodeURIComponent(l.address) === val('#location')
+                    ) {
+                      location = {
+                        id: l.id,
+                      };
+                      break;
+                    }
+                  }
+
+                  if (location === null) {
+                    const result = await API.postLocation(val('#location'));
+                    location = {
+                      id: result.id,
+                    };
+                  }
+                } catch (e) {
+                  Notification.notify(
+                    'Location not created.',
+                    'Could not create location. Try again later.'
+                  );
+                }
+              }
+
+              // labels
               let labelIDs = null;
               const labelsString = val('#labels').trim();
 
@@ -170,28 +239,6 @@
                 }
               }
 
-              let dateToAccomplish = null;
-              if (val('#dateToAccomplish') !== '') {
-                dateToAccomplish = val('#dateToAccomplish');
-              }
-
-              let completed = false;
-              let dateAccomplishedOn = null;
-              if (val('#dateAccomplishedOn') !== '') {
-                dateAccomplishedOn = val('#dateAccomplishedOn');
-                completed = true;
-              }
-
-              let image = item.image !== null ? item.image.id : null;
-              if (query('#image').files.length > 0) {
-                const payload = {
-                  image: query('#image').files[0],
-                };
-
-                const result = await API.postBucketImage(payload);
-                image = result.id;
-              }
-
               const payload = getBucketItemPayload(
                 item.id,
                 val('#title'),
@@ -201,6 +248,7 @@
                 dateAccomplishedOn,
                 completed,
                 image,
+                location,
                 labelIDs
               );
 
