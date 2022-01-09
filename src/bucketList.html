@@ -12,9 +12,9 @@
         <div
           class="grid grid-cols-4 sm:grid-cols-5 gap-x-4 p-2 px-3 sm:p-3 items-center font-bold text-sm"
         >
-          <div class="col-span-2">Name</div>
-          <div>Color</div>
-          <div class="hidden sm:block">Icon</div>
+          <a class="col-span-2" id="sort-name">Name</a>
+          <a id="sort-color">Color</a>
+          <a class="hidden sm:block" id="sort-icon">Icon</a>
           <div class="text-right">Actions</div>
         </div>
       </div>
@@ -68,10 +68,36 @@
 
         ready(async function () {
           try {
-            const buckets = await API.getBuckets();
+            const filter = new Filter({
+              sort: {
+                type: 'sort',
+                default: { key: 'name', desc: false },
+                allowed: ['name', 'color', 'icon'],
+              },
+            });
 
-            if (buckets.length > 0) {
-              buckets.forEach((bucket) => {
+            // Sorting
+            const sort = filter.get('sort');
+            const caret = sort.desc ? 'caret-down' : 'caret-up';
+
+            // Underline active sorting
+            query(`#sort-${Format.camelToKebab(sort.key)}`).classList.add(
+              'underline'
+            );
+            query(
+              `#sort-${Format.camelToKebab(sort.key)}`
+            ).innerHTML += `<i class="ti ti-${caret}"></i>`;
+
+            // Set sorting header links
+            query('#sort-name').href = filter.sortQuery('name');
+            query('#sort-color').href = filter.sortQuery('color');
+            query('#sort-icon').href = filter.sortQuery('icon');
+
+            const buckets = await API.getBuckets();
+            const sortedBuckets = Format.sort(buckets, sort.key, sort.desc);
+
+            if (sortedBuckets.length > 0) {
+              sortedBuckets.forEach((bucket) => {
                 const rules = [
                   {
                     key: 'name',

@@ -130,7 +130,34 @@
 
         ready(async function () {
           try {
-            const filter = new Filter();
+            const filter = new Filter({
+              completed: {
+                type: 'boolean',
+                default: null,
+              },
+              bucketId: {
+                type: 'number',
+                default: null,
+              },
+              labelId: {
+                type: 'number',
+                default: null,
+              },
+              limit: {
+                type: 'number',
+                default: null,
+              },
+              sort: {
+                type: 'sort',
+                default: { key: 'dateToAccomplish', desc: false },
+                allowed: [
+                  'title',
+                  'bucket',
+                  'dateToAccomplish',
+                  'dateAccomplishedOn',
+                ],
+              },
+            });
 
             // Toggle completed button
             const completed = filter.get('completed');
