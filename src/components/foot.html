@@ -2,3 +2,10 @@
 <script src="/assets/js/api.js"></script>
 <script src="/assets/js/webapp.js"></script>
 <script src="/assets/js/timeline.js"></script>
+<script>
+  const _c = Store.get('colors');
+  query('#bucket-logo').classList.replace(
+    'text-teal-500',
+    `text-${_c[Math.floor(Math.random() * _c.length)]}-500`
+  );
+</script>
