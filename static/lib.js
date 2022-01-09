@@ -176,6 +176,10 @@ const Format = {
   capitalize(value) {
     return value.charAt(0).toUpperCase() + value.slice(1);
   },
+  // Additionally replace + with space as decodeURIComponent expects %20 for a space
+  decodeURIComponent(value) {
+    return decodeURIComponent(value).replaceAll('+', ' ');
+  },
   // Transform a given ISO date string to DD. Month YYYY format.
   parseDate(dateString, short = false) {
     const date = new Date(dateString);
