@@ -7,11 +7,23 @@
       <component name="pagetitle" props="Buckets" />
       <div
         id="buckets"
-        class="max-w-2xl mx-auto divide-y divide-slate-100"
-      ></div>
-      <div class="max-w-2xl mx-auto flex justify-center pt-4">
-        <component name="button" props="Create;bucket/create" />
+        class="max-w-7xl mx-auto p-4 sm:px-6 lg:px-8 divide-y divide-slate-100"
+      >
+        <div
+          class="grid grid-cols-4 sm:grid-cols-5 gap-x-4 p-2 px-3 sm:p-3 items-center font-bold text-sm"
+        >
+          <div class="col-span-2">Name</div>
+          <div>Color</div>
+          <div class="hidden sm:block">Icon</div>
+          <div class="text-right">Actions</div>
+        </div>
       </div>
+      <template id="create-button">
+        <component
+          name="button-icon"
+          props="Create;bucket/create;create;plus"
+        />
+      </template>
       <template id="no-buckets">
         <div
           class="mx-4 border rounded-md sm:rounded-xl p-4 sm:p-6 text-center"
@@ -21,12 +33,12 @@
       </template>
       <template id="bucket">
         <div
-          class="grid grid-cols-3 sm:grid-cols-5 p-2 px-3 sm:p-3 items-center"
+          class="grid grid-cols-4 sm:grid-cols-5 gap-x-4 p-2 px-3 sm:p-3 items-center"
         >
-          <div data-name class="sm:col-span-2 font-bold"></div>
-          <div class="text-sm">
+          <div data-name class="col-span-2 truncate"></div>
+          <div class="text-sm truncate">
             <span
-              class="inline-block font-medium py-1 px-2 rounded-md"
+              class="inline-block max-w-full font-medium py-1 px-2 rounded-md"
               data-color
             ></span>
           </div>
@@ -100,6 +112,8 @@
             } else {
               Template.render('#no-buckets', [], '#buckets');
             }
+
+            Template.render('#create-button', [], '#pagetitle');
           } catch (e) {
             console.log(e);
             Notification.notify(
