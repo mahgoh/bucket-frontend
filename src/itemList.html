@@ -12,14 +12,18 @@
         <div
           class="grid grid-cols-15 gap-x-4 p-2 px-3 sm:p-3 items-center font-bold text-sm"
         >
-          <div class="text-center">
-            <i class="ti ti-circle-dot text-lg"></i>
-          </div>
-          <div class="col-span-4">Title</div>
-          <div class="col-span-2">Bucket</div>
+          <a class="text-center" id="toggle-completed">
+            <i id="toggle-completed-icon" class="ti text-lg"></i>
+          </a>
+          <a class="col-span-4 hover:underline" id="sort-title">Title</a>
+          <a class="col-span-2 hover:underline" id="sort-bucket">Bucket</a>
           <div class="col-span-2">Labels</div>
-          <div class="col-span-2">Accomplish By</div>
-          <div class="col-span-2">Accomplished On</div>
+          <a class="col-span-2 hover:underline" id="sort-date-to-accomplish">
+            Accomplish By
+          </a>
+          <a class="col-span-2 hover:underline" id="sort-date-accomplished-on">
+            Accomplished On
+          </a>
           <div class="col-span-2 text-right">Actions</div>
         </div>
       </div>
@@ -98,7 +102,43 @@
 
         ready(async function () {
           try {
-            const items = await API.getBucketItems();
+            const filter = new Filter();
+
+            // Toggle completed button
+            const completed = filter.get('completed');
+            const completedIcon = completed
+              ? 'circle-check'
+              : completed === false
+              ? 'circle-dot'
+              : 'circle-dashed';
+
+            query('#toggle-completed').href = filter.toggleQuery('completed');
+            query('#toggle-completed-icon').classList.add(
+              `ti-${completedIcon}`
+            );
+
+            // Sorting
+            const sort = filter.get('sort');
+            const caret = sort.desc ? 'caret-down' : 'caret-up';
+
+            // Underline active sorting
+            query(`#sort-${Format.camelToKebab(sort.key)}`).classList.add(
+              'underline'
+            );
+            query(
+              `#sort-${Format.camelToKebab(sort.key)}`
+            ).innerHTML += `<i class="ti ti-${caret}"></i>`;
+
+            // Set sorting header links
+            query('#sort-title').href = filter.sortQuery('title');
+            query('#sort-bucket').href = filter.sortQuery('bucket');
+            query('#sort-date-to-accomplish').href =
+              filter.sortQuery('dateToAccomplish');
+            query('#sort-date-accomplished-on').href =
+              filter.sortQuery('dateAccomplishedOn');
+
+            const items = await API.getBucketItems(filter.query());
+            const sortedItems = Format.sort(items, sort.key, sort.desc);
 
             if (items.length > 0) {
               items.forEach((item) => {
@@ -152,7 +192,7 @@
                         `bg-${item.bucket.color}-100`,
                         `text-${item.bucket.color}-700`,
                       ],
-                      href: `/item?bucketId=${item.bucket.id}`,
+                      href: `/item${filter.query('bucketId', item.bucket.id)}`,
                     },
                     {
                       key: 'icon',
@@ -167,7 +207,12 @@
                     html: item.labels
                       .map(
                         (label) =>
-                          `<a href="/item?labelId=${label.id}" class="text-slate-500 hover:underline">#${label.name}</a>`
+                          `<a href="/item${filter.query(
+                            'labelId',
+                            label.id
+                          )}" class="text-slate-500 hover:underline">#${
+                            label.name
+                          }</a>`
                       )
                       .join(' '),
                   });
