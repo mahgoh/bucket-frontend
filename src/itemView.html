@@ -20,7 +20,7 @@
                   class="sm:mt-1 text-slate-500 sm:text-lg"
                   data-description
                 ></div>
-                <div class="pt-4 text-sm sm:text-base">
+                <div class="pt-4 text-sm sm:text-base" data-meta>
                   <a
                     class="font-medium py-1 px-3 rounded-md hover:underline"
                     data-color
@@ -90,18 +90,9 @@
                 key: 'description',
                 textContent: item.description,
               },
-
               {
-                key: 'bucket',
-                textContent: item.bucket.name,
-              },
-              {
-                key: 'color',
-                classes: [
-                  `bg-${item.bucket.color}-100`,
-                  `text-${item.bucket.color}-700`,
-                ],
-                href: `/item?bucketId=${item.bucket.id}`,
+                key: 'meta',
+                remove: true,
               },
               {
                 key: 'edit',
@@ -120,6 +111,27 @@
                 },
               },
             ];
+
+            if (item.bucket) {
+              rules.cooncat([
+                {
+                  key: 'bucket',
+                  textContent: item.bucket.name,
+                },
+                {
+                  key: 'color',
+                  classes: [
+                    `bg-${item.bucket.color}-100`,
+                    `text-${item.bucket.color}-700`,
+                  ],
+                  href: `/item?bucketId=${item.bucket.id}`,
+                },
+                {
+                  key: 'icon',
+                  classes: [`ti-${item.bucket.icon}`],
+                },
+              ]);
+            }
 
             if (item.completed) {
               if (item.dateAccomplishedOn !== null) {
@@ -141,12 +153,17 @@
                 },
               });
             } else {
-              if (item.dateToAccomplish !== null) {
+              if (item.dateToAccomplish) {
                 rules.push({
                   key: 'date',
                   textContent: `Accomplish by ${Format.parseDate(
                     item.dateToAccomplish
                   )}`,
+                });
+              } else {
+                rules.push({
+                  key: 'date',
+                  remove: true,
                 });
               }
 
@@ -165,10 +182,15 @@
               });
             }
 
-            if (item.bucket.icon !== null) {
+            if (item.image) {
               rules.push({
-                key: 'icon',
-                classes: [`ti-${item.bucket.icon}`],
+                key: 'image',
+                src: `/api/bucket-items/images/${item.id}`,
+              });
+            } else {
+              rules.push({
+                key: 'image-container',
+                classes: ['hidden'],
               });
             }
 
@@ -181,18 +203,6 @@
                       `<a href="/item?labelId=${label.id}" class="text-slate-700 hover:underline">#${label.name}</a>`
                   )
                   .join(' '),
-              });
-            }
-
-            if (item.image != null) {
-              rules.push({
-                key: 'image',
-                src: `/api/bucket-items/images/${item.id}`,
-              });
-            } else {
-              rules.push({
-                key: 'image-container',
-                classes: ['hidden'],
               });
             }
 

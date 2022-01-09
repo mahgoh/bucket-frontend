@@ -41,11 +41,6 @@
                 option.setAttribute('value', bucket.id);
                 select.appendChild(option);
               });
-            } else {
-              Notification.notify(
-                'No Buckets available',
-                ' Please create a bucket first.'
-              );
             }
           } catch (error) {
             console.log('Could not load buckets: ', error);
@@ -72,8 +67,8 @@
             {
               identifier: '#bucket',
               type: 'text',
-              required: true,
-              message: 'Bucket must be selected.',
+              required: false,
+              message: 'Bucket does not exist.',
               event: 'change',
               validator: (value) =>
                 Regex.validate(Regex.preset('number', null, null), value),

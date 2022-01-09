@@ -30,7 +30,7 @@
                 class="sm:mt-1 text-slate-500 sm:text-lg"
                 data-description
               ></div>
-              <div class="pt-4 text-sm sm:text-base">
+              <div class="pt-4 text-sm sm:text-base" data-meta>
                 <a
                   class="font-medium py-1 px-3 rounded-md hover:underline"
                   data-color
@@ -75,26 +75,31 @@
                     key: 'description',
                     textContent: item.description,
                   },
-
                   {
-                    key: 'bucket',
-                    textContent: item.bucket.name,
-                  },
-                  {
-                    key: 'color',
-                    classes: [
-                      `bg-${item.bucket.color}-100`,
-                      `text-${item.bucket.color}-700`,
-                    ],
-                    href: `/item?bucketId=${item.bucket.id}`,
+                    key: 'meta',
+                    remove: true,
                   },
                 ];
 
-                if (item.bucket.icon !== null) {
-                  rules.push({
-                    key: 'icon',
-                    classes: [`ti-${item.bucket.icon}`],
-                  });
+                if (item.bucket) {
+                  rules.concat([
+                    {
+                      key: 'bucket',
+                      textContent: item.bucket.name,
+                    },
+                    {
+                      key: 'color',
+                      classes: [
+                        `bg-${item.bucket.color}-100`,
+                        `text-${item.bucket.color}-700`,
+                      ],
+                      href: `/item?bucketId=${item.bucket.id}`,
+                    },
+                    {
+                      key: 'icon',
+                      classes: [`ti-${item.bucket.icon}`],
+                    },
+                  ]);
                 }
 
                 if (item.labels.length > 0) {
@@ -109,16 +114,21 @@
                   });
                 }
 
-                if (item.dateToAccomplish !== null) {
+                if (item.dateToAccomplish) {
                   rules.push({
                     key: 'date',
                     textContent: `Accomplish by ${Format.parseDate(
                       item.dateToAccomplish
                     )}`,
                   });
+                } else {
+                  rules.push({
+                    key: 'date',
+                    remove: true,
+                  });
                 }
 
-                if (item.image != null) {
+                if (item.image) {
                   rules.push({
                     key: 'image',
                     src: `/api/bucket-items/images/${item.id}`,
