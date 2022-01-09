@@ -12,6 +12,13 @@
       <div class="max-w-2xl mx-auto flex justify-center pt-4">
         <component name="button" props="Create;bucket/create" />
       </div>
+      <template id="no-buckets">
+        <div
+          class="mx-4 border rounded-md sm:rounded-xl p-4 sm:p-6 text-center"
+        >
+          No buckets yet.
+        </div>
+      </template>
       <template id="bucket">
         <div
           class="grid grid-cols-3 sm:grid-cols-5 p-2 px-3 sm:p-3 items-center"
@@ -51,47 +58,51 @@
           try {
             const buckets = await API.getBuckets();
 
-            buckets.forEach((bucket) => {
-              const rules = [
-                {
-                  key: 'name',
-                  textContent: bucket.name,
-                },
-                {
-                  key: 'color',
-                  textContent: Format.capitalize(bucket.color),
-                  classes: [
-                    `bg-${bucket.color}-100`,
-                    `text-${bucket.color}-700`,
-                  ],
-                },
-                {
-                  key: 'edit',
-                  href: `/bucket/edit?id=${bucket.id}`,
-                },
-                {
-                  key: 'delete',
-                  listener() {
-                    Modal.confirm(
-                      'Delete Bucket?',
-                      `Do you really want to delete the bucket '${bucket.name}'? This action cannot be undone.`,
-                      async () => {
-                        await deleteBucket(bucket.id);
-                      }
-                    );
+            if (bucket.length > 0) {
+              buckets.forEach((bucket) => {
+                const rules = [
+                  {
+                    key: 'name',
+                    textContent: bucket.name,
                   },
-                },
-              ];
+                  {
+                    key: 'color',
+                    textContent: Format.capitalize(bucket.color),
+                    classes: [
+                      `bg-${bucket.color}-100`,
+                      `text-${bucket.color}-700`,
+                    ],
+                  },
+                  {
+                    key: 'edit',
+                    href: `/bucket/edit?id=${bucket.id}`,
+                  },
+                  {
+                    key: 'delete',
+                    listener() {
+                      Modal.confirm(
+                        'Delete Bucket?',
+                        `Do you really want to delete the bucket '${bucket.name}'? This action cannot be undone.`,
+                        async () => {
+                          await deleteBucket(bucket.id);
+                        }
+                      );
+                    },
+                  },
+                ];
 
-              if (bucket.icon !== null) {
-                rules.push({
-                  key: 'icon',
-                  classes: [`ti-${bucket.icon}`],
-                });
-              }
+                if (bucket.icon !== null) {
+                  rules.push({
+                    key: 'icon',
+                    classes: [`ti-${bucket.icon}`],
+                  });
+                }
 
-              Template.render('#bucket', rules, '#buckets');
-            });
+                Template.render('#bucket', rules, '#buckets');
+              });
+            } else {
+              Template.render('#no-buckets', [], '#buckets');
+            }
           } catch (e) {
             console.log(e);
             Notification.notify(
