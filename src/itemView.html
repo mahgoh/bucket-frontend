@@ -5,7 +5,6 @@
     <div id="app" class="pb-16 sm:pb-0 sm:pt-16">
       <component name="nav" props="-active;;;text-blue-500;;" />
       <component name="pagetitle" props="Bucket Item" />
-      <!-- TODO: add detail view -->
       <div id="item-container"></div>
       <template id="item">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
@@ -81,7 +80,7 @@
             const id = param('id');
             const item = await API.getBucketItem(id);
 
-            const rules = [
+            let rules = [
               {
                 key: 'title',
                 textContent: item.title,
@@ -89,10 +88,6 @@
               {
                 key: 'description',
                 textContent: item.description,
-              },
-              {
-                key: 'meta',
-                remove: true,
               },
               {
                 key: 'edit',
@@ -113,7 +108,7 @@
             ];
 
             if (item.bucket) {
-              rules.cooncat([
+              rules = rules.concat([
                 {
                   key: 'bucket',
                   textContent: item.bucket.name,
@@ -205,6 +200,11 @@
                   .join(' '),
               });
             }
+
+            rules.push({
+              key: 'meta',
+              remove: true,
+            });
 
             Template.render('#item', rules, '#item-container');
           } catch (e) {

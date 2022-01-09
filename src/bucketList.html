@@ -58,7 +58,7 @@
           try {
             const buckets = await API.getBuckets();
 
-            if (bucket.length > 0) {
+            if (buckets.length > 0) {
               buckets.forEach((bucket) => {
                 const rules = [
                   {

@@ -65,7 +65,7 @@
               const nextItems = sortedItems.slice(0, 3);
 
               nextItems.forEach((item) => {
-                const rules = [
+                let rules = [
                   {
                     key: 'title',
                     textContent: item.title,
@@ -75,14 +75,10 @@
                     key: 'description',
                     textContent: item.description,
                   },
-                  {
-                    key: 'meta',
-                    remove: true,
-                  },
                 ];
 
                 if (item.bucket) {
-                  rules.concat([
+                  rules = rules.concat([
                     {
                       key: 'bucket',
                       textContent: item.bucket.name,
@@ -139,6 +135,11 @@
                     classes: ['hidden'],
                   });
                 }
+
+                rules.push({
+                  key: 'meta',
+                  remove: true,
+                });
 
                 Template.render('#item', rules, '#item-container');
               });

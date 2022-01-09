@@ -45,9 +45,12 @@
           val('#description', item.description);
           val('#dateToAccomplish', item.dateToAccomplish);
           val('#dateAccomplishedOn', item.dateAccomplishedOn);
-          val('#location', Format.decodeURIComponent(item.location.address));
           val('#labels', item.labels.map((label) => label.name).join(' '));
           query('#cancel').href = `/item/view?id=${item.id}`;
+
+          if (item.location) {
+            val('#location', Format.decodeURIComponent(item.location.address));
+          }
 
           try {
             const buckets = await API.getBuckets();
