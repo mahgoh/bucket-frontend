@@ -7,7 +7,7 @@
       <component name="pagetitle" props="Bucket Item" />
       <div id="item-container"></div>
       <template id="item">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
           <div class="mb-4 sm:mb-6">
             <div class="border rounded-md sm:rounded-xl overflow-hidden">
               <div data-image-container>
@@ -38,7 +38,7 @@
           </div>
           <div class="flex flex-col sm:flex-row gap-2 sm:gap-x-4">
             <component name="button" props="Complete;;complete" />
-            <component name="button" props="Edit;;edit" />
+            <component name="button-edit" props="Edit;;edit" />
             <component name="button-delete" props="Delete;;delete" />
           </div>
         </div>
@@ -142,7 +142,8 @@
               rules.push({
                 key: 'complete',
                 href: '#',
-                textContent: 'Make uncomplete',
+                classes: ['group'],
+                html: '<i class="ti ti-circle-dot text-slate-500 group-hover:text-red-500 mr-2"></i> Unaccomplish',
                 async listener() {
                   await changeStatus(item, false, null);
                 },
@@ -165,6 +166,8 @@
               rules.push({
                 key: 'complete',
                 href: '#',
+                classes: ['group'],
+                html: '<i class="ti ti-circle-check text-slate-500 group-hover:text-green-500 mr-2"></i> Accomplish',
                 async listener() {
                   Modal.prompt(
                     'Set Accomplished',

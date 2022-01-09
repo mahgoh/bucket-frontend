@@ -5,7 +5,7 @@
     <div id="app" class="pb-16 sm:pb-0 sm:pt-16">
       <component name="nav" props="-active;;;text-blue-500;;" />
       <component name="pagetitle" props="Dashboard" />
-      <main class="max-w-5xl mx-auto p-4 sm:px-6 lg:px-8">
+      <main class="max-w-7xl mx-auto p-4 sm:px-6 lg:px-8">
         <div class="grid sm:grid-cols-3 gap-x-10 gap-y-4 grid-cols-1 mb-10">
           <component name="dashboard-button" props="Create;item/create" />
           <component name="dashboard-button" props="Bucket Items;item" />
@@ -104,7 +104,7 @@
                     html: item.labels
                       .map(
                         (label) =>
-                          `<a href="/item?labelId=${label.id}" class="text-slate-700 underline-none hover:underline">#${label.name}</a>`
+                          `<a href="/item?labelId=${label.id}" class="text-slate-500 hover:underline">#${label.name}</a>`
                       )
                       .join(' '),
                   });
