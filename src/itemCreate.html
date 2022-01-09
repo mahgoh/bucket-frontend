@@ -55,9 +55,9 @@
               identifier: '#title',
               type: 'text',
               required: true,
-              message: 'Title must be 3-30 characters long.',
+              message: 'Title must be between 3 and 50 characters.',
               validator: (value) =>
-                Regex.validate(Regex.preset('text', 3, 30), value),
+                Regex.validate(Regex.preset('text', 3, 50), value),
             },
             {
               identifier: '#description',
@@ -68,7 +68,6 @@
               validator: (value) =>
                 Regex.validate(Regex.preset('text', 0, 128), value),
             },
-            // TODO: Add rule for dateToAccomplish
             {
               identifier: '#bucket',
               type: 'text',
@@ -76,16 +75,17 @@
               message: 'Bucket must be selected.',
               event: 'change',
               validator: (value) =>
-                Regex.validate(Regex.preset('number', 0, 0), value),
+                Regex.validate(Regex.preset('number', null, null), value),
             },
-            // TODO: Replace rule for image
             {
-              identifier: '#image',
+              identifier: '#dateToAccomplish',
               type: 'text',
               required: false,
-              message: 'Image must be a valid url.',
-              validator: (value) =>
-                Regex.validate(Regex.preset('url', 0, 1024), value),
+              message: 'Must be a valid date.',
+              event: 'change',
+              validator: (value) => {
+                return Regex.validate(Regex.preset('date', null, null), value);
+              },
             },
             {
               identifier: '#labels',
@@ -93,7 +93,7 @@
               required: false,
               message: 'Labels must be a space-separated list - dash allowed.',
               validator: (value) =>
-                Regex.validate(Regex.preset('labels', 0, 0), value),
+                Regex.validate(Regex.preset('labels', null, null), value),
             },
           ];
 
