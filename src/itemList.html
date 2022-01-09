@@ -6,6 +6,38 @@
       <component name="nav" props="-active;;;text-blue-500;;" />
       <component name="pagetitle" props="Bucket Items" />
       <div
+        class="max-w-7xl mx-auto p-4 sm:px-6 lg:px-8 flex items-center gap-x-4"
+      >
+        <div>
+          <label
+            for="filter-bucket"
+            class="block text-sm font-medium text-slate-700 pr-2"
+            >Filter by Bucket:
+          </label>
+          <div class="w-52 max-w-60">
+            <select
+              id="filter-bucket"
+              name="filter-bucket"
+              class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md text-slate-500"
+            ></select>
+          </div>
+        </div>
+        <div>
+          <label
+            for="filter-label"
+            class="block text-sm font-medium text-slate-700 pr-2"
+            >Filter by Label:
+          </label>
+          <div class="w-52 max-w-60">
+            <select
+              id="filter-label"
+              name="filter-label"
+              class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md text-slate-500"
+            ></select>
+          </div>
+        </div>
+      </div>
+      <div
         id="items"
         class="max-w-7xl mx-auto p-4 sm:px-6 lg:px-8 divide-y divide-slate-100"
       >
@@ -31,11 +63,7 @@
         <component name="button-icon" props="Create;item/create;create;plus" />
       </template>
       <template id="no-items">
-        <div
-          class="mx-4 border rounded-md sm:rounded-xl p-4 sm:p-6 text-center"
-        >
-          No bucket items yet.
-        </div>
+        <div class="mx-4 p-4 sm:p-6 text-center">No bucket items found.</div>
       </template>
       <template id="item">
         <div class="grid grid-cols-15 gap-x-4 p-2 px-3 sm:p-3 items-center">
@@ -136,6 +164,46 @@
               filter.sortQuery('dateToAccomplish');
             query('#sort-date-accomplished-on').href =
               filter.sortQuery('dateAccomplishedOn');
+
+            const buckets = await API.getBuckets();
+            const labels = await API.getLabels();
+
+            const sortedBuckets = Format.sort(buckets, 'name', false);
+            const sortedLabels = Format.sort(labels, 'name', false);
+
+            sortedBuckets.unshift({ id: 'all', name: 'All' });
+            sortedLabels.unshift({ id: 'all', name: 'All' });
+
+            const filterBucket = query('#filter-bucket');
+            const filterLabel = query('#filter-label');
+
+            sortedBuckets.forEach((bucket) => {
+              let option = document.createElement('option');
+              option.textContent = bucket.name;
+              option.setAttribute('value', bucket.id);
+
+              if (bucket.id === filter.get('bucketId')) option.selected = true;
+
+              filterBucket.appendChild(option);
+            });
+
+            sortedLabels.forEach((label) => {
+              let option = document.createElement('option');
+              option.textContent = label.name;
+              option.setAttribute('value', label.id);
+
+              if (label.id === filter.get('labelId')) option.selected = true;
+
+              filterLabel.appendChild(option);
+            });
+
+            filterBucket.addEventListener('change', (e) => {
+              redirect(filter.query('bucketId', e.target.value));
+            });
+
+            filterLabel.addEventListener('change', (e) => {
+              redirect(filter.query('labelId', e.target.value));
+            });
 
             const items = await API.getBucketItems(filter.query());
             const sortedItems = Format.sort(items, sort.key, sort.desc);

@@ -367,8 +367,9 @@ const Format = {
   sort(items, key, desc = false) {
     switch (key) {
       case 'title':
+      case 'name':
         items.sort((a, b) => {
-          return a.title < b.title ? -1 : a.title > b.title ? 1 : 0;
+          return a[key] < b[key] ? -1 : a[key] > b[key] ? 1 : 0;
         });
         break;
       case 'bucket':
