@@ -59,6 +59,13 @@
           </div>
         </div>
       </template>
+      <template id="no-items">
+        <div
+          class="mb-4 sm:mb-6 border rounded-md sm:rounded-xl overflow-hidden p-4 sm:p-6 text-center"
+        >
+          No bucket items completed yet.
+        </div>
+      </template>
       <script>
         ready(async function () {
           try {
@@ -160,8 +167,10 @@
                 Template.render('#timeline-item', rules, '#timeline');
               }
             } else {
-              // TODO: Show empty timeline
-              Notification.notify('No items', 'No bucket items to show.');
+              query('#timeline').innerHTML = '';
+              query('#timeline').className = '';
+
+              Template.render('#no-items', [], '#timeline');
             }
           } catch (error) {
             console.error(error);

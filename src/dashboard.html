@@ -48,6 +48,13 @@
           </div>
         </div>
       </template>
+      <template id="no-upcoming">
+        <div
+          class="mb-4 sm:mb-6 border rounded-md sm:rounded-xl p-4 sm:p-6 text-center"
+        >
+          No upcoming bucket items.
+        </div>
+      </template>
       <component name="footer" />
       <script>
         ready(async function () {
@@ -125,6 +132,8 @@
 
                 Template.render('#item', rules, '#item-container');
               });
+            } else {
+              Template.render('#no-upcoming', [], '#item-container');
             }
           } catch (error) {
             console.error(error);
