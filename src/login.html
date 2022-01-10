@@ -29,6 +29,7 @@
               type: 'text',
               required: true,
               message: 'Must be a valid emailaddress.',
+              event: ['keyup', 'input'],
               validator: (value) =>
                 Regex.validate(Regex.preset('email', 0, 128), value),
             },
@@ -38,6 +39,7 @@
               required: true,
               message:
                 'Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character.',
+              event: ['keyup', 'input'],
               validator: (value) =>
                 Regex.validate(Regex.preset('password', 8, '', ''), value),
             },

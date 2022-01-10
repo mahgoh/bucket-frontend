@@ -54,6 +54,7 @@
               type: 'text',
               required: true,
               message: 'Name must be 3-30 characters long.',
+              event: ['keyup', 'input'],
               validator: (value) =>
                 Regex.validate(Regex.preset('text', 3, 30), value),
             },

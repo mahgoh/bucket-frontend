@@ -87,6 +87,7 @@
               type: 'text',
               required: true,
               message: 'Title must be betweeen 3 and 50 characters.',
+              event: ['keyup', 'input'],
               validator: (value) =>
                 Regex.validate(Regex.preset('text', 3, 50), value),
             },
@@ -96,6 +97,7 @@
               required: false,
               message:
                 'Description has a maximum length of 128 characters long.',
+              event: ['keyup', 'input'],
               validator: (value) =>
                 Regex.validate(Regex.preset('text', 0, 128), value),
             },
@@ -132,6 +134,7 @@
               required: false,
               message:
                 'Description has a maximum length of 128 characters long.',
+              event: ['keyup', 'input'],
               validator: (value) =>
                 Regex.validate(Regex.preset('text', 0, 128), value),
             },
@@ -140,6 +143,7 @@
               type: 'text',
               required: false,
               message: 'Labels must be a space-separated list - dash allowed.',
+              event: ['keyup', 'input'],
               validator: (value) =>
                 Regex.validate(Regex.preset('labels', null, null), value),
             },

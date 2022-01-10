@@ -50,6 +50,7 @@
                 type: 'text',
                 required: true,
                 message: 'Name must be between 3 and 50 characters',
+                event: ['keyup', 'input'],
                 validator: (value) =>
                   Regex.validate(Regex.preset('text', 3, 50), value),
               },
@@ -58,6 +59,7 @@
                 type: 'text',
                 required: true,
                 message: 'Must be a valid emailaddress.',
+                event: ['keyup', 'input'],
                 validator: (value) =>
                   Regex.validate(Regex.preset('email', 0, 128), value),
               },
@@ -67,6 +69,7 @@
                 required: true,
                 message:
                   'Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character.',
+                event: ['keyup', 'input'],
                 validator: (value) =>
                   Regex.validate(Regex.preset('password', 8, '', ''), value),
               },
@@ -97,7 +100,8 @@
 
                 try {
                   const result = await API.putProfile(payload);
-                  redirect(`/profile/edit`);
+                  console.log(result);
+                  // redirect(`/profile/edit`);
                 } catch (error) {
                   console.error(error);
                   Notification.notify(
