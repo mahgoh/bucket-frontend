@@ -4,8 +4,10 @@
 <script src="/assets/js/timeline.js"></script>
 <script>
   const _c = Store.get('colors');
-  query('#bucket-logo').classList.replace(
-    'text-teal-500',
-    `text-${_c[Math.floor(Math.random() * _c.length)]}-500`
-  );
+  if (query('#bucket-logo')) {
+    query('#bucket-logo').classList.replace(
+      'text-teal-500',
+      `text-${_c[Math.floor(Math.random() * _c.length)]}-500`
+    );
+  }
 </script>
