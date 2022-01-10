@@ -18,6 +18,12 @@
       <component name="footer" />
       <script>
         ready(async function () {
+          validateLogin((result) => {
+            if (!result) {
+              redirect('/login');
+            }
+          });
+
           const colors = Store.get('colors');
           const icons = Store.get('icons');
           let bucket = null;

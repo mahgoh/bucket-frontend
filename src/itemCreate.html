@@ -28,6 +28,12 @@
       <component name="footer" />
       <script>
         ready(async function () {
+          validateLogin((result) => {
+            if (!result) {
+              redirect('/login');
+            }
+          });
+
           try {
             const buckets = await API.getBuckets();
             if (buckets.length > 0) {

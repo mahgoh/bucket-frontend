@@ -142,6 +142,12 @@
         }
 
         ready(async function () {
+          validateLogin((result) => {
+            if (!result) {
+              redirect('/login');
+            }
+          });
+
           try {
             const filter = new Filter({
               completed: {

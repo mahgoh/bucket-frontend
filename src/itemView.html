@@ -76,6 +76,12 @@
         }
 
         ready(async function () {
+          validateLogin((result) => {
+            if (!result) {
+              redirect('/login');
+            }
+          });
+
           try {
             const id = param('id');
             const item = await API.getBucketItem(id);

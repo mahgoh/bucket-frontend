@@ -27,6 +27,12 @@
       <component name="footer" />
       <script>
         ready(async function () {
+          validateLogin((result) => {
+            if (!result) {
+              redirect('/login');
+            }
+          });
+
           try {
             const profile = await API.getProfile();
 
