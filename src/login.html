@@ -58,7 +58,10 @@
                 redirect(`/`);
               } catch (error) {
                 console.error(error);
-                Notification.notify('Something went wrong', 'Could not login.');
+                Notification.notify(
+                  'Login failed',
+                  'Verify your credentials and try again.'
+                );
               }
             }
           });
