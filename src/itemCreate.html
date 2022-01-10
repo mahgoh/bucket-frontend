@@ -37,14 +37,16 @@
           try {
             const buckets = await API.getBuckets();
             if (buckets.length > 0) {
-              buckets.sort();
+              const sortedBuckets = Format.sort(buckets, 'name', false);
 
               const select = query('#bucket');
 
-              buckets.forEach((bucket) => {
+              sortedBuckets.forEach((bucket) => {
                 let option = document.createElement('option');
+
                 option.textContent = bucket.name;
                 option.setAttribute('value', bucket.id);
+
                 select.appendChild(option);
               });
             }

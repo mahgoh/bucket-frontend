@@ -61,17 +61,18 @@
           try {
             const buckets = await API.getBuckets();
             if (buckets.length > 0) {
-              buckets.sort();
+              const sortedBuckets = Format.sort(buckets, 'name', false);
 
               const select = query('#bucket');
 
-              buckets.forEach((bucket) => {
+              sortedBuckets.forEach((bucket) => {
                 let option = document.createElement('option');
 
                 option.textContent = bucket.name;
                 option.setAttribute('value', bucket.id);
 
-                if (bucket.id === item.bucket.id) option.selected = true;
+                if (item.bucket && item.bucket.id === bucket.id)
+                  option.selected = true;
 
                 select.appendChild(option);
               });
