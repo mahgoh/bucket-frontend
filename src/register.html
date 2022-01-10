@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <component name="head" />
+  <body>
+    <div id="app" class="pb-16 sm:pb-0 sm:pt-16">
+      <component name="pagetitle-center" props="Register" />
+      <form class="max-w-md mx-auto p-4 sm:px-6 lg:px-8">
+        <component name="input-text" props="text;name;Name;;" />
+        <component name="input-text" props="email;email;Email;;" />
+        <component name="input-text" props="password;password;Password;;" />
+        <div class="flex gap-x-3">
+          <component name="button-submit" props="Register" />
+        </div>
+      </form>
+      <component name="footer" />
+      <script>
+        ready(async function () {
+          const watchers = [
+            {
+              identifier: '#name',
+              type: 'text',
+              required: true,
+              message: 'Name must be between 3 and 50 characters',
+              validator: (value) =>
+                Regex.validate(Regex.preset('text', 3, 50), value),
+            },
+            {
+              identifier: '#email',
+              type: 'text',
+              required: true,
+              message: 'Must be a valid emailaddress.',
+              validator: (value) =>
+                Regex.validate(Regex.preset('email', 0, 128), value),
+            },
+            {
+              identifier: '#password',
+              type: 'text',
+              required: true,
+              message:
+                'Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character.',
+              validator: (value) =>
+                Regex.validate(Regex.preset('password', 8, '', ''), value),
+            },
+          ];
+
+          Form.watch(watchers, '#submit');
+
+          query('form').addEventListener('submit', async (e) => {
+            if (Form.isValid()) {
+              e.preventDefault();
+
+              const payload = {
+                name: val('#name'),
+                email: val('#email'),
+                password: val('#password'),
+              };
+
+              try {
+                const result = await API.register(payload);
+                redirect(`/`);
+              } catch (error) {
+                console.error(error);
+                Notification.notify(
+                  'Something went wrong',
+                  'Could not create profile.'
+                );
+              }
+            }
+          });
+        });
+      </script>
+    </div>
+  </body>
+</html>
