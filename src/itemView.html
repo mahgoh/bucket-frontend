@@ -34,6 +34,7 @@
                   data-date
                 ></div>
               </div>
+              <div data-location></div>
             </div>
           </div>
           <div class="flex flex-col sm:flex-row gap-2 sm:gap-x-4">
@@ -195,6 +196,13 @@
               rules.push({
                 key: 'image-container',
                 classes: ['hidden'],
+              });
+            }
+
+            if (item.location) {
+              rules.push({
+                key: 'location',
+                html: `<iframe height="300" class="w-full" style="border:0" loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/place?key=AIzaSyApVxlOUaehtXb5XD5eo5p2yaClBKPQhn0&q=${item.location.address}"></iframe>`,
               });
             }
 
