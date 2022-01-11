@@ -100,8 +100,7 @@
 
                 try {
                   const result = await API.putProfile(payload);
-                  console.log(result);
-                  // redirect(`/profile/edit`);
+                  redirect(`/profile/edit`);
                 } catch (error) {
                   console.error(error);
                   Notification.notify(
