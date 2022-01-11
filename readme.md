@@ -229,3 +229,9 @@ $ go build -ldflags "-X main.GitSemverStr=$GIT_SEMVER_STR" .
 ```
 
 > **Note:** Tested on macOS 12.1 (ARM) with Go 1.17.2
+
+## Dependencies
+
+To watch for file changes, the third-party development dependency `fsnotify` is used. However, this is only required for the watch mode.
+
+- [fsnotify](github.com/fsnotify/fsnotify) ([BSD-3-Clause License](https://github.com/fsnotify/fsnotify/blob/master/LICENSE))
