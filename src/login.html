@@ -2,9 +2,14 @@
 <html lang="en">
   <component name="head" />
   <body>
-    <div id="app" class="pb-16 sm:pb-0 sm:pt-16">
+    <div id="app">
       <component name="notifications" />
-      <component name="pagetitle-center" props="Login" />
+      <div class="pt-24 max-w-md mx-auto">
+        <img class="w-64" src="/assets/img/bucket_logo.svg" />
+      </div>
+      <div class="max-w-md mx-auto">
+        <component name="pagetitle" props="Login" />
+      </div>
       <form class="max-w-md mx-auto p-4 sm:px-6 lg:px-8">
         <component name="input-text" props="email;email;Email;;" />
         <component name="input-text" props="password;password;Password;;" />
@@ -12,10 +17,9 @@
         <div class="flex gap-x-3">
           <component name="button-submit" props="Login" />
         </div>
-        <div class="mt-4 text-sm">
-          <a
-            href="/user/register"
-            class="block text-slate-500 text-center hover:underline"
+        <div class="mt-6 text-sm">
+          <span class="pr-2 text-slate-500">Don't have an account?</span>
+          <a href="/user/register" class="underline hover:text-blue-500"
             >Register</a
           >
         </div>
