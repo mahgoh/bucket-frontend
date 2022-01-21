@@ -1,5 +1,11 @@
 module.exports = {
   content: ['./dist/**/*.{html,js}'],
+  safelist: [
+    {
+      pattern:
+        /text-(red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|gray)-(100|500|700)/,
+    },
+  ],
   theme: {
     extend: {
       gridTemplateColumns: {
