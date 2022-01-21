@@ -263,11 +263,11 @@ A static module that provides simple animation functions.
 
 - `Animation.fadeIn(identifier)`  
   Fades in the element with provided `identifier`.
-- `Animation.fadeOut(identifier)`
+- `Animation.fadeOut(identifier)`  
   Fades out the element with provided `identifier`.
-- `Animation.slideIn(identifier)`
+- `Animation.slideIn(identifier)`  
   Slides in the element with provided `identifier`.
-- `Animation.slideOut(identifier)`
+- `Animation.slideOut(identifier)`  
   Slides out the element with provided `identifier`.
 
 ### `Filter`
@@ -318,7 +318,7 @@ Complete options object with all `FilterParam` types included.
 }
 ```
 
-- `filter.query(key?, value?)`
+- `filter.query(key?, value?)`  
   Returns a query param string of the present filter settings and setting the provided `key` with the provided `value`. This can be used to set the `href` a button. If not key and value is provided, it simply returns the current filter settings.
 - `filter.sortQuery(key)`  
   Returns a query param string of the present filter settings and set the sorting to the provided `key`. Automatically reverses the ordering if the provided `key` is already the active sorting.
@@ -403,7 +403,7 @@ A static module that provides regular expression presets.
 
 - `Regex.preset(preset, min?, max?, flags?)`  
   Returns a RegExp of the given preset or the default preset if `preset` does not exist. In addition, it compiles the preset with a provided `min` and `max` if applicable and provided `flags`.
-- `Regex.validate(regex, value)`
+- `Regex.validate(regex, value)`  
   Validates if the provided `value` matches the provided `regex`.
 
 ### `Store` (static)
@@ -434,7 +434,7 @@ Rules allow to describe how to manipulate elements inside the template. The corr
   Sets the innerHTML of the element to the specified value.
 - `classes`  
   An array of strings. Adds each string to the classList of the element.
-- `src`
+- `src`  
   Sets the src attribute of the element to the specified value.
 - `href`  
   Sets the href attribute of the element to the specified value.
