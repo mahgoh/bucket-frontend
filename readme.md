@@ -1,4 +1,12 @@
-# bucket-frontend
+<p align="center">
+  <img src="./bucket_logo.svg" width="600" />
+</p>
+<p align="center">  
+  Manage your bucket list in a modern web experience.<br>
+  <a href="https://github.com/972C8/bucket-webapp">Main Repository</a> | <a href="https://bucket-webapp.herokuapp.com">Demo</a>
+</p>
+
+# Bucket Frontend
 
 This repository serves as the development environment for the frontend of the [Bucket](https://github.com/972C8/bucket-webapp) webapp. The frontend is developed using a simple custom HTML bundler written in [Go](https://go.dev) that produces static HTML files which are then integrated in the Bucket backend.
 
